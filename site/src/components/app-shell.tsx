@@ -33,7 +33,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             {open ? <X size={16} strokeWidth={1.5} /> : <Menu size={16} strokeWidth={1.5} />}
           </button>
           <Link href="/design" className="mark">inspiration</Link>
-          <span className="version">v0.2.0</span>
+          <span className="version">v0.3.0</span>
         </div>
         <div className="topbar-right">
           <ThemeToggle />

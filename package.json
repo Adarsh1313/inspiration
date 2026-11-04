@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "pnpm --filter site dev",
     "build": "pnpm --filter site build",
-    "test": "pnpm --filter site test",
-    "typecheck": "pnpm --filter site typecheck"
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck",
+    "sync": "pnpm --filter tools sync",
+    "used-in": "pnpm --filter tools used-in"
   }
 }

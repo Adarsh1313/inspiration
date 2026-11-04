@@ -1,0 +1,22 @@
+{
+  "name": "tools",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sync": "tsx src/sync.ts",
+    "used-in": "tsx src/used-in.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/pg": "^8.23.1",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  }
+}

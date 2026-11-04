@@ -227,7 +227,7 @@ Agents given a hub URL can read cards with a read-only token through `llms.txt`,
   - Code done (shell, OTP login, guard + tests, placeholders, robots). Still manual: GitHub repo push, Supabase `hub` project + env vars, Vercel link.
 - [x] **2. Notepad**: notepad sync, archive on clear and on conflict, word count, copy, download, PWA manifest and service worker. Done when phone typing shows on the laptop within seconds.
   - Code done and deployed on push. Needs your check: type on phone, see it on laptop; install to home screen.
-- [ ] **3. Card schema + mirror + skill**: `cards`, `capture_tasks` and RLS, the worker role, mirror generator with `pnpm sync`, `design-library` skill (trigger, ask-gate, DESIGN.md write-back, `used_in`, slop gate), and the global symlink.
+- [x] **3. Card schema + mirror + skill**: `cards`, `capture_tasks` and RLS, the worker role, mirror generator with `pnpm sync`, `design-library` skill (trigger, ask-gate, DESIGN.md write-back, `used_in`, slop gate), and the global symlink.
 - [ ] **4a. Capture core + paste bar**: normalise, draft, extractors with fixtures, capture API, paste bar with preview, image paste or drop, duplicate and error states, draft cards with "media pending".
 - [ ] **4b. Local worker**: task claiming, media steps (yt-dlp, ffmpeg, Playwright, Reddit OAuth, transcripts), Storage upload, mirror refresh, Task Scheduler install script, `pnpm capture:pending`, `/add-ref`.
 - [ ] **4c. Seed + enrichment**: seed script for the 50 cards (`needs_review` flags, @zzzzshawn as a person with related cards), and `/enrich-cards`. Done when all 50 seed cards are in.
