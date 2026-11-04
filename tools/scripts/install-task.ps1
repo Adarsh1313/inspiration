@@ -29,5 +29,5 @@ $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -AllowStartIfOnBatt
 Register-ScheduledTask -TaskName $TaskName -Action $action -Trigger $trigger -Settings $settings `
   -Description "Downloads media for new design references and refreshes design-library/." -Force | Out-Null
 
-Write-Host "Installed $TaskName: runs at logon and every 2 hours. Output goes to $log."
+Write-Host "Installed ${TaskName}: runs at logon and every 2 hours. Output goes to $log."
 Write-Host "Run it now with:  Start-ScheduledTask -TaskName $TaskName"
