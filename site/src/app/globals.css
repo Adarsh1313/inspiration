@@ -96,7 +96,7 @@ button { cursor: pointer; }
     transition: transform var(--dur-slow) var(--ease-drawer), visibility 0s linear var(--dur-slow);
   }
   .sidenav[data-open="true"] { transform: none; visibility: visible; transition-delay: 0s; }
-  .sheet-scrim[data-open="true"] { display: block; position: fixed; inset: var(--topbar-h) 0 0 0; z-index: 14; background: oklch(0 0 0 / 0.2); }
+  .sheet-scrim[data-open="true"] { display: block; position: fixed; inset: var(--topbar-h) 0 0 0; z-index: 14; background: var(--scrim); }
 }
 
 /* Login */
