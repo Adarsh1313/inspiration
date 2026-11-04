@@ -16,6 +16,7 @@
     "enrich": "pnpm --filter tools enrich",
     "cluster": "pnpm --filter tools cluster",
     "install:commands": "pnpm --filter tools install:commands",
-    "token:rotate": "pnpm --filter tools token:rotate"
+    "token:rotate": "pnpm --filter tools token:rotate",
+    "rebuild": "pnpm --filter tools rebuild"
   }
 }

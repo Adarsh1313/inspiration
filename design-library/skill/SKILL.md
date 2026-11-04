@@ -47,7 +47,19 @@ A card with `kind: directory` has `browse_notes`. Browse the directory's site wi
 
 ### 5. Exact rebuild
 
-Handled in a later milestone (frame extraction, motion spec, render-and-compare). Until then, describe the motion from the card's text and preview.
+Use when Adarsh asks to rebuild a card's animation "exactly". "Exact" means the same timing and choreography (beats, start times, length, easing, stagger, loop), in the **target project's own colours and type**. It does not mean the same pixels or brand. Needs a card with an original **clip** (`refs/<slug>/original.mp4`, `.webm`, `.mov` or `.gif`). A card with only `original.png` has no motion to measure: run `pnpm capture:pending` then `pnpm sync` in the hub repo first, or tell Adarsh the clip is missing.
+
+Run these in the hub repo (`pnpm rebuild ...`). Do not skip a step or write code before step 2 is done.
+
+1. **Measure.** `pnpm rebuild frames <slug>` writes, in `refs/<slug>/`: `frames/f0001.png...` (one every 0.25 s, so `f0001` is t=0, `f0005` is t=1.0 s), `frames/contact-sheet.png` (6 per row, left to right, 0.25 s apart, so each row is 1.5 s), `frames/manifest.json` (size, length, sampled palette, beat start times) and `motion-spec.md` (a template).
+2. **Write the motion spec.** Open the contact sheet, then the individual frames around each beat. Fill every `TODO` in `motion-spec.md`: what happens in plain words, a timing table (beat, start, duration, what moves, from-to, easing), easing per mover (judge it from how far things travel between frames: big steps early and small late is ease-out), stagger (delay and order), loop behaviour, and how the source colours map to the target project's tokens. Rerunning `frames` never overwrites a spec you have filled in (`--force` starts over).
+3. **Build it** in the target project, from the spec only. Colours and type come from the project's `design/tokens.css`, never from the source. Motion follows my-motion.
+4. **Render.** `pnpm rebuild render <page.html|url> --out <render.mp4> --seconds <source length + 0.5>` records the page in headless Chromium at 1280x720 (`--size WxH` to change it). The recording starts at page load, so start the animation on load, or trim a known lead-in with `--trim <seconds>`.
+5. **Compare.** `pnpm rebuild compare <slug> <render.mp4>` compares how much changes over time, not colour. It prints MATCH, CLOSE or OFF, the lag in seconds, the beat start times for both and plain notes ("the rebuild runs 0.40 s late", "the source has 3 beats, the rebuild has 2"), and writes `compare/compare-sheet.png` (source on top, rebuild below). Look at that sheet too: the numbers say when, the picture says what.
+6. **Fix and repeat** steps 3 to 5 until it says MATCH (it exits 0 only on MATCH). Change one thing per round, using the notes: lag means shift delays; a different length means durations or the loop point; a missing beat means the sequence is wrong; low correlation with matching beats means the easing differs.
+7. **Report** the final verdict and which numbers you matched, and note anything the measurement can't see (for example hover states or anything off-screen).
+
+Limits: MATCH means timing and choreography agree at 8 samples a second. It cannot tell two easings apart when the beats line up, so check easing by eye on the sheet. Source clips with camera cuts or a moving background will read as constant motion; say so rather than forcing a match.
 
 ### 6. Last step on every build: slop check
 
