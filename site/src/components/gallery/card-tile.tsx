@@ -21,6 +21,7 @@ export function CardTile({ card, priority = false }: { card: GalleryCard; priori
   const [copied, setCopied] = useState(false);
   const [clipReady, setClipReady] = useState(false);
   const [clipRequested, setClipRequested] = useState(false);
+  const viaPointer = useRef(false); // keyboard focus shows the summary but never starts a clip (no motion for keyboard navigation)
   const root = useRef<HTMLElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const pointerType = useRef("mouse");
@@ -30,12 +31,12 @@ export function CardTile({ card, priority = false }: { card: GalleryCard; priori
 
   // The clip loads on first hover and plays only while the card is active. Reduced motion keeps the still poster.
   useEffect(() => {
-    if (active && card.previewUrl && !prefersReducedMotion()) setClipRequested(true);
+    if (active && viaPointer.current && card.previewUrl && !prefersReducedMotion()) setClipRequested(true);
   }, [active, card.previewUrl]);
   useEffect(() => {
     const el = video.current;
     if (!el) return;
-    if (active) void el.play().catch(() => {});
+    if (active && viaPointer.current) void el.play().catch(() => {});
     else {
       el.pause();
       el.currentTime = 0;
@@ -72,6 +73,7 @@ export function CardTile({ card, priority = false }: { card: GalleryCard; priori
     // On touch the first tap acts like hover; the second opens the source.
     if (pointerType.current === "touch" && !active) {
       e.preventDefault();
+      viaPointer.current = true;
       setActive(true);
     }
   }
@@ -103,8 +105,16 @@ export function CardTile({ card, priority = false }: { card: GalleryCard; priori
       data-active={active}
       data-menu-open={menuOpen}
       data-archived={archived}
-      onPointerEnter={(e) => e.pointerType === "mouse" && setActive(true)}
-      onPointerLeave={(e) => e.pointerType === "mouse" && !menuOpen && setActive(false)}
+      onPointerEnter={(e) => {
+        if (e.pointerType !== "mouse") return;
+        viaPointer.current = true;
+        setActive(true);
+      }}
+      onPointerLeave={(e) => {
+        if (e.pointerType !== "mouse" || menuOpen) return;
+        viaPointer.current = false;
+        setActive(false);
+      }}
       onFocus={() => setActive(true)}
       onBlur={(e) => !e.currentTarget.contains(e.relatedTarget) && !menuOpen && setActive(false)}
     >

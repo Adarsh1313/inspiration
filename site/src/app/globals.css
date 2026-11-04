@@ -297,23 +297,13 @@ button { cursor: pointer; }
 .preview-actions .btn { margin-top: 0; }
 @media (max-width: 48rem) { .preview { grid-template-columns: minmax(0, 1fr); } }
 
-/* Recent cards (before the gallery) */
-.recent { list-style: none; margin: var(--space-7) 0 0; padding: 0; display: grid; }
-.recent-item {
-  display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2);
-  padding: var(--space-3) 0;
-  border-bottom: var(--hairline) solid var(--line);
-}
-.recent-title { flex: 1 1 var(--card-min); min-width: 0; font-weight: var(--weight-medium); overflow-wrap: anywhere; }
-.recent-title:hover { text-decoration: underline; text-underline-offset: var(--space-1); }
-
 /* Chips that act as filters */
 .chip-btn {
   background: var(--pill); color: var(--ink);
   transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out);
 }
 .chip-btn.chip-idle { background: transparent; color: var(--ink-muted); }
-.chip-btn.chip-idle:hover { color: var(--ink); border-color: var(--ink-faint); }
+@media (hover: hover) { .chip-btn.chip-idle:hover { color: var(--ink); border-color: var(--ink-faint); } }
 .chip-btn:active { transform: scale(0.97); }
 
 /* Filters */
@@ -329,7 +319,7 @@ button { cursor: pointer; }
 .shelf { margin-top: var(--space-8); }
 .shelf-head { display: flex; align-items: baseline; gap: var(--space-3); margin-bottom: var(--space-4); }
 .shelf-title { margin: 0; font-size: var(--text-md); font-weight: var(--weight-medium); line-height: var(--leading-tight); }
-.shelf-title a:hover { text-decoration: underline; text-underline-offset: var(--space-1); }
+@media (hover: hover) { .shelf-title a:hover { text-decoration: underline; text-underline-offset: var(--space-1); } }
 .shelf-count { color: var(--ink-faint); }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--card-min), 1fr)); gap: var(--space-4); }
 
@@ -374,6 +364,9 @@ button { cursor: pointer; }
   width: var(--menu-w); padding: var(--space-1);
   display: grid;
   background: var(--surface); border: var(--hairline) solid var(--line); border-radius: var(--radius-md); box-shadow: var(--shadow-lift);
+  transform-origin: top right;
+  transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
+  @starting-style { opacity: 0; transform: translateY(calc(-1 * var(--space-1))) scale(0.97); }
 }
 .menu-item {
   display: block; width: 100%; padding: var(--space-2) var(--space-3);
@@ -381,7 +374,8 @@ button { cursor: pointer; }
   text-align: left; font-size: var(--text-sm); color: var(--ink);
   transition: background-color var(--dur-fast) var(--ease-out);
 }
-.menu-item:hover:not(:disabled), .menu-item:focus-visible { background: var(--pill); }
+.menu-item:focus-visible { background: var(--pill); }
+@media (hover: hover) { .menu-item:hover:not(:disabled) { background: var(--pill); } }
 .menu-item:disabled { color: var(--ink-faint); cursor: default; }
 .menu-item.danger { color: var(--danger); }
 .tile-confirm { padding: var(--space-2); display: grid; gap: var(--space-2); font-size: var(--text-sm); }
@@ -390,7 +384,7 @@ button { cursor: pointer; }
 .tile-foot { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-3); }
 .source-icon { display: inline-grid; place-items: center; flex: none; color: var(--ink-muted); }
 .tile-title { flex: 1; min-width: 0; font-size: var(--text-base); font-weight: var(--weight-medium); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.tile-title:hover { text-decoration: underline; text-underline-offset: var(--space-1); }
+@media (hover: hover) { .tile-title:hover { text-decoration: underline; text-underline-offset: var(--space-1); } }
 .tile-open { flex: none; }
 .tile-badges { display: flex; flex-wrap: wrap; gap: var(--space-1); padding: 0 var(--space-3) var(--space-3); }
 
@@ -402,7 +396,7 @@ button { cursor: pointer; }
 .cardpage { max-width: var(--content-max); }
 .crumbs { display: flex; gap: var(--space-2); color: var(--ink-faint); font-size: var(--text-sm); }
 .crumbs a { color: var(--ink-muted); }
-.crumbs a:hover { color: var(--ink); }
+@media (hover: hover) { .crumbs a:hover { color: var(--ink); } }
 .card-title {
   margin: var(--space-4) 0 var(--space-3);
   font-family: var(--font-serif); font-weight: var(--weight-regular);
