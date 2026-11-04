@@ -11,7 +11,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "pg": "^8.23.1"
+    "@aws-sdk/client-s3": "^3.1000.0",
+    "@hub/capture": "workspace:*",
+    "pg": "^8.23.1",
+    "playwright": "^1.60.0"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
