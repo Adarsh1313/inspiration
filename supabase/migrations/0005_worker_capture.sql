@@ -3,9 +3,11 @@
 
 grant insert (slug, canonical_key, source_url, source_type, title, author, description, kind, shelf, status, media_status, media_error, needs_review, notes, poster_sm, poster_lg)
   on public.cards to hub_worker;
+drop policy if exists worker_insert on public.cards;
 create policy worker_insert on public.cards for insert to hub_worker with check (status = 'draft');
 
 grant insert (card_id, step) on public.capture_tasks to hub_worker;
+drop policy if exists worker_insert on public.capture_tasks;
 create policy worker_insert on public.capture_tasks for insert to hub_worker with check (true);
 
 -- Enrichment written from a Claude Code session: summary, tags, mood, reuse notes and the review flag.
