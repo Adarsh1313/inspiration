@@ -67,7 +67,13 @@ const ytdlpDeps: Deps["ytdlp"] = {
     return newestFile(dir, "ytdlp.");
   },
   async transcript(url, dir) {
-    await ytdlp(["--skip-download", "--write-subs", "--write-auto-subs", "--sub-langs", "en.*,en", "--sub-format", "vtt", "-o", join(dir, "subs.%(ext)s"), url]);
+    // Ask for plain English only: a wildcard like en.* requests every English variant and trips YouTube's 429 limit.
+    try {
+      await ytdlp(["--skip-download", "--write-subs", "--write-auto-subs", "--sub-langs", "en", "--sub-format", "vtt", "--sleep-subtitles", "3", "--retries", "3", "--retry-sleep", "exp=2:30", "-o", join(dir, "subs.%(ext)s"), url]);
+    } catch (e) {
+      // A failed extra request can still leave a usable file behind; only give up if there is none.
+      if (!newestFile(dir, "subs.")) throw e;
+    }
     const file = newestFile(dir, "subs.");
     return file ? parseVtt(readFileSync(file, "utf8")) || null : null;
   },
