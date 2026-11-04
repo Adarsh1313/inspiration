@@ -157,5 +157,3 @@ async function transcript(ctx: StepContext): Promise<void> {
 }
 
 export const STEPS: Record<CaptureStep, (ctx: StepContext) => Promise<void>> = { download, screenshot, poster, preview, transcript };
-
-export { ToolError };

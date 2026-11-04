@@ -1,5 +1,5 @@
 import { lookup } from "node:dns/promises";
-import { CaptureError, KINDS, SHELVES, draft, saveCard, type SaveOverrides } from "@hub/capture";
+import { CaptureError, KINDS, SHELVES, draft, normalise, saveCard, type SaveOverrides } from "@hub/capture";
 import { NextResponse } from "next/server";
 import { supabaseCardStore } from "@/lib/cards-store";
 import { MAX_IMAGE_BYTES, sniffImage } from "@/lib/image";
@@ -41,8 +41,13 @@ export async function POST(req: Request) {
   }
 
   try {
+    // Check the normalised key first so a duplicate costs no network fetches.
+    const store = supabaseCardStore(await serverClient());
+    const existing = await store.findByKey(normalise(payload.url).canonicalKey);
+    if (existing) return NextResponse.json({ duplicate: existing }, { status: 409 });
+
     const d = await draft(payload.url, { fetch, resolveHost });
-    const result = await saveCard(supabaseCardStore(await serverClient()), { draft: d, overrides: overridesFrom(payload), image });
+    const result = await saveCard(store, { draft: d, overrides: overridesFrom(payload), image });
     if (!result.ok) return NextResponse.json({ duplicate: result.duplicate }, { status: 409 });
     return NextResponse.json({ slug: result.slug }, { status: 201 });
   } catch (e) {

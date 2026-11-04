@@ -1,5 +1,5 @@
 import { assertPublicUrl } from "./ssrf";
-import { CaptureError, type SourceType } from "./types";
+import type { SourceType } from "./types";
 
 export type Normalised = {
   canonicalUrl: string;
@@ -11,7 +11,7 @@ export type Normalised = {
 const X_HOSTS = new Set(["x.com", "twitter.com", "fxtwitter.com", "vxtwitter.com", "fixupx.com", "fixvx.com"]);
 const YT_HOSTS = new Set(["youtube.com", "youtube-nocookie.com", "music.youtube.com"]);
 const X_RESERVED = new Set(["home", "explore", "search", "i", "intent", "share", "settings", "messages", "notifications", "login", "compose", "hashtag"]);
-const TRACKING = /^(utm_.*|mc_.*|fbclid|gclid|igshid|si|feature|ref|ref_src|ref_url|s|t)$/i;
+const TRACKING = /^(utm_.*|mc_.*|fbclid|gclid|igshid|si|feature|ref_src|ref_url)$/i;
 const VIDEO_FILE = /\.(mp4|webm|mov|m4v)$/i;
 
 function bareHost(host: string): string {
@@ -94,6 +94,3 @@ export function normalise(raw: string): Normalised {
   return normaliseGeneric(url, host, "site");
 }
 
-export function isCaptureError(e: unknown): e is CaptureError {
-  return e instanceof CaptureError;
-}

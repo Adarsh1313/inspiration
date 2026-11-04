@@ -31,10 +31,12 @@ export function PasteBar() {
   const [duplicate, setDuplicate] = useState<Existing | null>(null);
   const [saved, setSaved] = useState<string | null>(null);
   const previewedRaw = useRef("");
+  const requestId = useRef(0);
 
   useEffect(() => () => void (imageUrl && URL.revokeObjectURL(imageUrl)), [imageUrl]);
 
   function discard() {
+    requestId.current++; // drop any preview still loading
     setPhase("idle");
     setDraft(null);
     setEditing(false);
@@ -55,9 +57,11 @@ export function PasteBar() {
     setSaved(null);
     setDraft(null);
     previewedRaw.current = value;
+    const mine = ++requestId.current;
     try {
       const res = await fetch("/api/capture/preview", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ url: value }) });
       const body = (await res.json()) as { draft?: Draft; duplicate?: Existing; error?: string };
+      if (mine !== requestId.current) return;
       if (body.duplicate) {
         setDuplicate(body.duplicate);
         return setPhase("idle");
@@ -72,6 +76,7 @@ export function PasteBar() {
       setShelf(body.draft.suggestedShelf);
       setPhase("preview");
     } catch {
+      if (mine !== requestId.current) return;
       setError("Could not reach the server. Check your connection and try again.");
       setPhase("idle");
     }
