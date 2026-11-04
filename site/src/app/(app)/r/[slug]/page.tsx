@@ -20,7 +20,9 @@ async function loadCard(slug: string) {
   const { data } = await session.auth.getUser();
   // The proxy lets a read-only token reach this page without a session; reads then use the service client.
   const owner = !!data.user;
-  const page = await readCardPage(owner ? session : serviceClient(), slug).catch(() => null);
+  const found = await readCardPage(owner ? session : serviceClient(), slug).catch(() => null);
+  // A token holder sees only active cards, the same as /r/<slug>.md and llms.txt.
+  const page = found && (owner || found.card.status === "active") ? found : null;
   return { page, owner };
 }
 
