@@ -37,7 +37,7 @@ export function ThoughtsBoard({ initial }: { initial: Note[] }) {
   // N adds a note, unless you are already typing somewhere.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key.toLowerCase() !== "n" || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key.toLowerCase() !== "n" || e.repeat || e.metaKey || e.ctrlKey || e.altKey) return;
       const t = e.target as HTMLElement;
       if (t.tagName === "TEXTAREA" || t.tagName === "INPUT" || t.isContentEditable) return;
       e.preventDefault();
@@ -92,6 +92,18 @@ function NoteCard({
   const [confirming, setConfirming] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const area = useRef<HTMLTextAreaElement>(null);
+  const unsaved = useRef<string | null>(null);
+  const patchRef = useRef(patch);
+  patchRef.current = patch;
+
+  // Flush text typed in the last debounce window if the card unmounts (navigation, archive).
+  useEffect(
+    () => () => {
+      clearTimeout(timer.current);
+      if (unsaved.current !== null) void patchRef.current(note.id, { text: unsaved.current });
+    },
+    [note.id],
+  );
 
   useEffect(() => {
     if (autoFocus) area.current?.focus();
@@ -99,8 +111,12 @@ function NoteCard({
 
   function typed(next: string) {
     setText(next);
+    unsaved.current = next;
     clearTimeout(timer.current);
-    timer.current = setTimeout(() => void patch(note.id, { text: next }), DEBOUNCE_MS);
+    timer.current = setTimeout(() => {
+      unsaved.current = null;
+      void patch(note.id, { text: next });
+    }, DEBOUNCE_MS);
   }
 
   return (
@@ -114,6 +130,9 @@ function NoteCard({
         onChange={(e) => setTag(e.target.value)}
         onBlur={() => tag !== (note.tag ?? "") && void patch(note.id, { tag: tag.trim() || null })}
       />
+      <time className="note-date mono" dateTime={note.created_at}>
+        {new Date(note.created_at).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" })}
+      </time>
       <div className="note-actions">
         <div className="swatches" role="group" aria-label="Colour">
           {NOTE_COLOURS.map((c) => (

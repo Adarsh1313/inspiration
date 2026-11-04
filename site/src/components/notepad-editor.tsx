@@ -7,6 +7,7 @@ import { onLoad, onRemote, onSaveResult, wordCount, type LocalDraft, type Notepa
 
 const DRAFT_KEY = "notepad-draft";
 const DEBOUNCE_MS = 500;
+const RETRY_MS = 5000;
 
 type Status = "saved" | "saving" | "offline";
 
@@ -17,6 +18,37 @@ function readDraft(): LocalDraft | null {
   } catch {
     return null;
   }
+}
+
+const QUEUE_KEY = "notepad-archive-queue";
+type Pending = { text: string; reason: "cleared" | "conflict" };
+
+function readQueue(): Pending[] {
+  try {
+    return JSON.parse(localStorage.getItem(QUEUE_KEY) ?? "[]") as Pending[];
+  } catch {
+    return [];
+  }
+}
+
+function writeQueue(q: Pending[]) {
+  try {
+    localStorage.setItem(QUEUE_KEY, JSON.stringify(q));
+  } catch {}
+}
+
+/** Archive a copy; if that fails, keep it on this device and retry later so words are never lost. */
+async function archiveSafely(item: Pending): Promise<boolean> {
+  const { error } = await browserClient().from("notepad_archive").insert(item);
+  if (error) writeQueue([...readQueue(), item]);
+  return !error;
+}
+
+async function flushQueue() {
+  const queue = readQueue();
+  if (!queue.length) return;
+  writeQueue([]);
+  for (const item of queue) await archiveSafely(item);
 }
 
 function writeDraft(draft: LocalDraft) {
@@ -34,12 +66,13 @@ export function NotepadEditor({ initial }: { initial: Server | null }) {
   const latest = useRef({ text: initial?.text ?? "", rev: initial?.rev ?? 0, dirty: false });
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const saving = useRef(false);
+  const retry = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const apply = useCallback((s: NotepadState) => {
     latest.current = { text: s.text, rev: s.rev, dirty: s.dirty };
     setText(s.text);
     writeDraft({ text: s.text, baseRev: s.rev, dirty: s.dirty });
-    if (s.archive) void browserClient().from("notepad_archive").insert({ text: s.archive, reason: "conflict" });
+    if (s.archive) void archiveSafely({ text: s.archive, reason: "conflict" });
   }, []);
 
   const save = useCallback(async () => {
@@ -51,7 +84,11 @@ export function NotepadEditor({ initial }: { initial: Server | null }) {
     const { data, error } = await browserClient().rpc("save_notepad", { p_text: sent, p_base_rev: latest.current.rev });
     saving.current = false;
     const row = data?.[0];
-    if (error || !row) return setStatus("offline");
+    if (error || !row) {
+      setStatus("offline");
+      retry.current = setTimeout(() => void save(), RETRY_MS);
+      return;
+    }
 
     const typedSince = latest.current.text !== sent;
     const result = { ok: row.ok, text: row.new_text, rev: row.new_rev };
@@ -65,7 +102,16 @@ export function NotepadEditor({ initial }: { initial: Server | null }) {
     setStatus("saved");
   }, [apply]);
 
-  // On open: reconcile any offline draft with the server row.
+  // Fetch the current server row and reconcile it with any offline draft.
+  // Also covers a page served from the offline cache with a stale row.
+  const refresh = useCallback(async () => {
+    const { data } = await browserClient().from("notepad").select("text, rev").eq("id", 1).maybeSingle();
+    if (data) {
+      apply(onLoad(readDraft(), data));
+      if (latest.current.dirty) void save();
+    }
+  }, [apply, save]);
+
   useEffect(() => {
     if (initial) {
       apply(onLoad(readDraft(), initial));
@@ -78,7 +124,9 @@ export function NotepadEditor({ initial }: { initial: Server | null }) {
         setStatus("offline");
       }
     }
-  }, [initial, apply, save]);
+    void flushQueue();
+    if (navigator.onLine) void refresh();
+  }, [initial, apply, save, refresh]);
 
   // Realtime updates from other devices, and retry when back online.
   useEffect(() => {
@@ -91,7 +139,10 @@ export function NotepadEditor({ initial }: { initial: Server | null }) {
         if (next) apply(next);
       })
       .subscribe();
-    const online = () => void save();
+    const online = () => {
+      void flushQueue();
+      void refresh();
+    };
     const offline = () => setStatus("offline");
     window.addEventListener("online", online);
     window.addEventListener("offline", offline);
@@ -100,7 +151,7 @@ export function NotepadEditor({ initial }: { initial: Server | null }) {
       window.removeEventListener("online", online);
       window.removeEventListener("offline", offline);
     };
-  }, [apply, save]);
+  }, [apply, save, refresh]);
 
   function change(next: string) {
     setText(next);
@@ -114,8 +165,8 @@ export function NotepadEditor({ initial }: { initial: Server | null }) {
     const current = latest.current.text;
     if (current.trim() === "") return;
     // Archive first so clearing is never destructive.
-    const { error } = await browserClient().from("notepad_archive").insert({ text: current, reason: "cleared" });
-    if (error) return setStatus("offline");
+    const archived = await archiveSafely({ text: current, reason: "cleared" });
+    if (!archived) setStatus("offline");
     change("");
     void save();
   }

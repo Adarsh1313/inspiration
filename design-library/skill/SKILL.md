@@ -43,7 +43,7 @@ After Adarsh picks:
 
 ### 4. Directory cards
 
-A card with `kind: directory` has `browse_notes`. Browse the directory's site with the built-in browser, following those notes. When Adarsh picks an item, record its URL and a one-line note. Saved picks appear on the card page.
+A card with `kind: directory` has `browse_notes`. Browse the directory's site with the built-in browser, following those notes. When Adarsh picks an item, save it with `pnpm pick <slug> <url> "<one-line note>"` in the hub repo. Saved picks appear on the card page.
 
 ### 5. Exact rebuild
 

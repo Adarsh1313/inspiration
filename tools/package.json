@@ -6,6 +6,7 @@
   "scripts": {
     "sync": "tsx src/sync.ts",
     "used-in": "tsx src/used-in.ts",
+    "pick": "tsx src/pick.ts",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },

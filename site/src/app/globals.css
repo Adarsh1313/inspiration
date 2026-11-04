@@ -178,3 +178,4 @@ button { cursor: pointer; }
 .swatch[data-colour="green"] { background: var(--note-green); }
 .swatch[data-colour="grey"] { background: var(--note-grey); }
 .swatch[aria-pressed="true"] { box-shadow: 0 0 0 var(--hairline) var(--ink-muted); }
+.note-date { font-size: var(--text-xs); opacity: 0.55; }
