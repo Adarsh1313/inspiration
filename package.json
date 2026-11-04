@@ -9,6 +9,11 @@
     "typecheck": "pnpm -r typecheck",
     "sync": "pnpm --filter tools sync",
     "used-in": "pnpm --filter tools used-in",
-    "pick": "pnpm --filter tools pick"
+    "pick": "pnpm --filter tools pick",
+    "capture:pending": "pnpm --filter tools capture:pending",
+    "capture:add": "pnpm --filter tools capture:add",
+    "seed": "pnpm --filter tools seed",
+    "enrich": "pnpm --filter tools enrich",
+    "install:commands": "pnpm --filter tools install:commands"
   }
 }

@@ -8,7 +8,12 @@
     "used-in": "tsx src/used-in.ts",
     "pick": "tsx src/pick.ts",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "capture:pending": "tsx src/capture-pending.ts",
+    "capture:add": "tsx src/capture-add.ts",
+    "seed": "tsx src/seed.ts",
+    "enrich": "tsx src/enrich.ts",
+    "install:commands": "tsx src/install-commands.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1000.0",

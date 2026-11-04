@@ -1,4 +1,7 @@
-import type { Kind, Shelf } from "./types";
+import { slugify } from "./card";
+import { suggest } from "./draft";
+import { normalise } from "./normalise";
+import type { Draft, Kind, Shelf } from "./types";
 
 export type SeedCard = {
   title: string;
@@ -59,4 +62,22 @@ export function parseSeed(markdown: string): SeedCard[] {
     });
   }
   return cards;
+}
+
+/** A draft built from the seed row alone, for when the link cannot be fetched or there is no link yet. */
+export function offlineDraft(seed: SeedCard): Draft {
+  const base = {
+    title: seed.title,
+    author: null,
+    description: "",
+    posterUrl: null,
+    mediaUrl: null,
+    errors: seed.url ? [] : [{ code: "failed" as const, message: "No link yet." }],
+  };
+  if (!seed.url) {
+    return { ...base, canonicalUrl: "", canonicalKey: `seed:${slugify(seed.title)}`, sourceType: "github", suggestedShelf: seed.shelf, kind: seed.kind ?? "skill" };
+  }
+  const n = normalise(seed.url);
+  const { kind } = suggest(n, { ...base, hints: [seed.title, seed.note] });
+  return { ...base, canonicalUrl: n.canonicalUrl, canonicalKey: n.canonicalKey, sourceType: n.sourceType, suggestedShelf: seed.shelf, kind: seed.kind ?? kind };
 }

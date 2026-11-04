@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { DuplicateKeyError, type CardStore } from "./save-card";
+import { DuplicateKeyError, type CardStore } from "@hub/capture";
 import { serverClient } from "./supabase";
 
 type Client = Awaited<ReturnType<typeof serverClient>>;

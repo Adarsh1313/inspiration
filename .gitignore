@@ -8,3 +8,7 @@ design-library/refs/*/frames/
 *.tsbuildinfo
 
 .vercel
+
+.worker/
+design-library/refs/*/clip.gif
+design-library/refs/*/original.*

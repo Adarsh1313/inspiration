@@ -1,9 +1,8 @@
 import { lookup } from "node:dns/promises";
-import { CaptureError, SHELVES, KINDS, draft, type SaveOverrides } from "@hub/capture";
+import { CaptureError, KINDS, SHELVES, draft, saveCard, type SaveOverrides } from "@hub/capture";
 import { NextResponse } from "next/server";
 import { supabaseCardStore } from "@/lib/cards-store";
 import { MAX_IMAGE_BYTES, sniffImage } from "@/lib/image";
-import { saveCard } from "@/lib/save-card";
 import { serverClient } from "@/lib/supabase";
 
 export const maxDuration = 15;

@@ -26,7 +26,7 @@ export function uniqueSlug(base: string, taken: ReadonlySet<string>): string {
 export type NewCard = {
   slug: string;
   canonical_key: string;
-  source_url: string;
+  source_url: string | null;
   source_type: string;
   title: string;
   author: string | null;
@@ -34,8 +34,10 @@ export type NewCard = {
   kind: Kind;
   shelf: Shelf;
   status: "draft";
-  media_status: "pending" | "ready";
+  media_status: "pending" | "ready" | "failed";
+  media_error?: string;
   needs_review: boolean;
+  notes?: string;
 };
 
 export type NewCardInput = {
@@ -45,15 +47,19 @@ export type NewCardInput = {
   /** True when a pasted image is the preview, so no media work is queued. */
   hasImage?: boolean;
   needsReview?: boolean;
+  /** Adarsh's own note (from the seed list). */
+  notes?: string;
+  /** Set when there is nothing to fetch (a seed row with no link yet): no tasks, media marked failed with this reason. */
+  mediaError?: string;
 };
 
 /** The row to insert for a saved draft, plus the worker steps to queue. */
-export function newCard({ draft, overrides = {}, slug, hasImage = false, needsReview = false }: NewCardInput): { card: NewCard; steps: CaptureStep[] } {
+export function newCard({ draft, overrides = {}, slug, hasImage = false, needsReview = false, notes, mediaError }: NewCardInput): { card: NewCard; steps: CaptureStep[] } {
   const title = (overrides.title ?? draft.title).trim() || draft.canonicalUrl;
   const card: NewCard = {
     slug,
     canonical_key: draft.canonicalKey,
-    source_url: draft.canonicalUrl,
+    source_url: draft.canonicalUrl || null,
     source_type: draft.sourceType,
     title,
     author: draft.author,
@@ -61,8 +67,10 @@ export function newCard({ draft, overrides = {}, slug, hasImage = false, needsRe
     kind: overrides.kind ?? draft.kind,
     shelf: overrides.shelf ?? draft.suggestedShelf,
     status: "draft",
-    media_status: hasImage ? "ready" : "pending",
+    media_status: hasImage ? "ready" : mediaError ? "failed" : "pending",
     needs_review: needsReview,
   };
-  return { card, steps: hasImage ? [] : planSteps(draft.sourceType, draft) };
+  if (mediaError && !hasImage) card.media_error = mediaError;
+  if (notes?.trim()) card.notes = notes.trim();
+  return { card, steps: hasImage || mediaError ? [] : planSteps(draft.sourceType, draft) };
 }

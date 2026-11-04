@@ -53,6 +53,10 @@ Handled in a later milestone (frame extraction, motion spec, render-and-compare)
 
 Run the "slop indicators" card (`slop-indicators`) as a checklist against what you built. Name every indicator you kept on purpose and why. Do not skip this step.
 
+### 7. Adding a reference
+
+When Adarsh pastes a link in chat to save as a reference, or runs `/add-ref <url>`, run `pnpm --dir <hub repo> capture:add "<url>"`. It saves a draft card and runs the local worker. Don't summarise or enrich it; `/enrich-cards` does that in one batch. `pnpm install:commands` copies the two commands into `~/.claude/commands`.
+
 ## Rules
 
 - Never read the whole library. The index first, then at most 3 cards.

@@ -5,4 +5,6 @@ export { newCard, slugify, uniqueSlug, type NewCard, type SaveOverrides } from "
 export { assertPublicUrl, isBlockedIp, type ResolveHost } from "./ssrf";
 export type { FetchLike } from "./http";
 export { decodeEntities } from "./html";
-export { parseSeed, type SeedCard } from "./seed";
+export { parseSeed, offlineDraft, type SeedCard } from "./seed";
+export { saveCard, DuplicateKeyError, type CardStore, type CardRow, type ExistingCard, type SaveInput, type SaveResult } from "./save-card";
+export { validateEnrichment, type Enrichment, type EnrichmentCheck } from "./enrich";

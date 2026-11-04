@@ -1,4 +1,5 @@
-import { newCard, slugify, uniqueSlug, type CaptureStep, type Draft, type NewCard, type SaveOverrides } from "@hub/capture";
+import { newCard, slugify, uniqueSlug, type NewCard, type SaveOverrides } from "./card";
+import type { CaptureStep, Draft } from "./types";
 
 export type ExistingCard = { slug: string; title: string };
 
@@ -26,6 +27,8 @@ export type SaveInput = {
   overrides?: SaveOverrides;
   image?: { bytes: Uint8Array; ext: string; mime: string };
   needsReview?: boolean;
+  notes?: string;
+  mediaError?: string;
 };
 
 export type SaveResult = { ok: true; slug: string; id: string } | { ok: false; duplicate: ExistingCard };
@@ -41,7 +44,7 @@ export async function saveCard(store: CardStore, input: SaveInput): Promise<Save
 
   for (let attempt = 0; attempt < 3; attempt++) {
     const slug = uniqueSlug(base, await store.slugsStartingWith(base));
-    const { card, steps } = newCard({ draft: input.draft, overrides: input.overrides, slug, hasImage: !!posterPath, needsReview: input.needsReview });
+    const { card, steps } = newCard({ draft: input.draft, overrides: input.overrides, slug, hasImage: !!posterPath, needsReview: input.needsReview, notes: input.notes, mediaError: input.mediaError });
     try {
       const { id } = await store.insertCard(posterPath ? { ...card, poster_sm: posterPath, poster_lg: posterPath } : card);
       await store.queueSteps(id, steps);
