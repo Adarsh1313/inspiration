@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   title: { default: "inspiration", template: "%s · inspiration" },
   description: "Private hub.",
   robots: { index: false, follow: false },
+  icons: { icon: "/pwa-icon/192.png", apple: "/pwa-icon/180.png" },
+  appleWebApp: { capable: true, title: "inspiration", statusBarStyle: "default" },
 };
 
 export const viewport: Viewport = { width: "device-width", initialScale: 1 };

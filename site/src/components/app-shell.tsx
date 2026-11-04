@@ -16,6 +16,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   useEffect(() => setOpen(false), [pathname]);
   useEffect(() => {
+    if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => {});
+  }, []);
+  useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);
@@ -30,7 +33,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             {open ? <X size={16} strokeWidth={1.5} /> : <Menu size={16} strokeWidth={1.5} />}
           </button>
           <Link href="/design" className="mark">inspiration</Link>
-          <span className="version">v0.1.0</span>
+          <span className="version">v0.2.0</span>
         </div>
         <div className="topbar-right">
           <ThemeToggle />
