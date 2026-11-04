@@ -34,7 +34,7 @@ export function AppShell({ children, counts }: { children: React.ReactNode; coun
             {open ? <X size={16} strokeWidth={1.5} /> : <Menu size={16} strokeWidth={1.5} />}
           </button>
           <Link href="/design" className="mark">inspiration</Link>
-          <span className="version">v0.5.0</span>
+          <span className="version">v0.9.0</span>
         </div>
         <div className="topbar-right">
           <ThemeToggle />

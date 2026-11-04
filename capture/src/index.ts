@@ -9,3 +9,4 @@ export { parseSeed, offlineDraft, type SeedCard } from "./seed";
 export { saveCard, DuplicateKeyError, type CardStore, type CardRow, type ExistingCard, type SaveInput, type SaveResult } from "./save-card";
 export { validateEnrichment, type Enrichment, type EnrichmentCheck } from "./enrich";
 export { cardMarkdown, oneLine, type MirrorCard, type Mood } from "./card-markdown";
+export { jobDraft, jobFromText, jobKey, contentKey, toIsoDate, parseJobTitle, parseJobPostingLd, type JobDraft } from "./job";

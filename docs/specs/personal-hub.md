@@ -240,5 +240,6 @@ Agents given a hub URL can read cards with a read-only token through `llms.txt`,
 - [x] **7. Agent access**: read-only token, `pnpm token:rotate`, `/llms.txt`, `/r/[slug].md`, `/api/refs.json` with filters. Done when an agent given a card URL finds the right card (Flow D).
   - Code done and unit-tested (filters, llms.txt, JSON-LD, token script). Still manual: add `SUPABASE_SERVICE_ROLE_KEY` on Vercel, run `pnpm token:rotate`, redeploy, then `curl -H "Authorization: Bearer <token>" <hub>/llms.txt`. The JSON-LD embed lands with the card page in slice 5.
 - [ ] **8. Exact rebuild**: frame extraction, contact sheet and palette, motion spec template, render-and-compare loop in the skill, proven on the pre-loader X animation.
-- [ ] **9. Jobs + cold email**: `job_postings`, paste bar on /jobs with job preview, text and screenshot fallback, status list, cold email placeholder in the shell.
+- [x] **9. Jobs + cold email**: `job_postings`, paste bar on /jobs with job preview, text and screenshot fallback, status list, cold email placeholder in the shell.
+  - Code done: `@hub/capture` job preview (JobPosting JSON-LD, then page titles, then pasted text), `/jobs` paste bar with editable fields, text and screenshot fallback, status list with filter, delete, cold email placeholder, nav count. Unit-tested (capture fixtures, field checks); build passes. Still manual: apply `supabase/migrations/0008_job_postings.sql`, then paste a posting on /jobs.
 - [ ] **Polish**: review UI against my-motion and emil-design-eng, then `/impeccable polish`.

@@ -128,15 +128,16 @@ export type NavCounts = { design: number; shelves: Record<Shelf, number>; jobs: 
 
 /** Counts for the side nav: one light query per area. Any failure counts as 0 so the shell never breaks. */
 export async function readNavCounts(supabase: SupabaseClient): Promise<NavCounts> {
-  const [cards, notes] = await Promise.all([
+  const [cards, notes, jobs] = await Promise.all([
     supabase.from("cards").select("shelf,status").neq("status", "archived"),
     supabase.from("notes").select("id", { count: "exact", head: true }).eq("status", "active"),
+    supabase.from("job_postings").select("id", { count: "exact", head: true }),
   ]);
   const shelves = shelfCounts((cards.data ?? []) as Pick<GalleryCard, "shelf" | "status">[]);
   return {
     design: (cards.data ?? []).length,
     shelves,
-    jobs: 0,
+    jobs: jobs.count ?? 0,
     thoughts: notes.count ?? 0,
   };
 }
