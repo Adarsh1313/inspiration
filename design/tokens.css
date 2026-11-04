@@ -77,6 +77,7 @@
   --shadow-note-lift: 0 4px 6px oklch(0 0 0 / 0.1), 6px 10px 16px oklch(0 0 0 / 0.16);
   --ease-back: cubic-bezier(0.34, 1.4, 0.64, 1);
   --dur-drop: 220ms;
+  --dur-trace: 500ms;
   --lift-scale: 1.06;
   --drop-scale: 1.12;
 
@@ -154,5 +155,6 @@
     --dur-base: 0ms;
     --dur-slow: 0ms;
     --dur-drop: 0ms;
+    --dur-trace: 0ms;
   }
 }

@@ -227,8 +227,21 @@ button { cursor: pointer; }
   background: var(--surface);
   border: 0.125rem dashed var(--line-strong);
   border-radius: var(--radius-lg);
+  pointer-events: none; /* clicks fall through to the wall so a note can be added inside a group */
 }
-.wall-frame-label { position: absolute; left: var(--space-4); top: var(--space-3); font-weight: var(--weight-medium); font-size: var(--text-md); color: var(--ink); }
+.wall-frame[data-moving="true"] { box-shadow: var(--shadow-lift); }
+.wall-frame-bar { pointer-events: auto; display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); padding: var(--space-3) var(--space-3) var(--space-2) var(--space-4); cursor: grab; touch-action: none; }
+.wall-frame-name { flex: 0 1 auto; field-sizing: content; min-width: 8rem; max-width: 70%; padding: 0; border: 0; background: transparent; font-weight: var(--weight-medium); font-size: var(--text-md); color: var(--ink); }
+.wall-frame-name:focus-visible { box-shadow: none; outline: none; }
+.wall-frame-bar .icon-btn { opacity: 0; width: var(--space-6); height: var(--space-6); }
+.wall-frame:hover .icon-btn, .wall-frame:focus-within .icon-btn { opacity: 1; }
+.wall-frame-bar .icon-btn.danger { width: auto; padding: 0 var(--space-2); color: var(--danger); font-size: var(--text-xs); }
+.wall-frame-grip { pointer-events: auto; position: absolute; right: 0; bottom: 0; width: var(--space-5); height: var(--space-5); cursor: nwse-resize; touch-action: none; border-right: 0.125rem solid var(--line-strong); border-bottom: 0.125rem solid var(--line-strong); border-bottom-right-radius: var(--radius-lg); }
+.frame-trace { position: absolute; inset: calc(-1 * var(--space-1)); width: calc(100% + 2 * var(--space-1)); height: calc(100% + 2 * var(--space-1)); overflow: visible; pointer-events: none; }
+.frame-trace rect { fill: none; stroke: var(--ink-muted); stroke-width: 2; stroke-dasharray: 1; animation: frame-trace var(--dur-trace) var(--ease-out) forwards; }
+@keyframes frame-trace { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+.wall[data-busy="true"] { pointer-events: none; }
+.wall-actions { flex: none; flex-wrap: wrap; justify-content: flex-end; }
 
 /* Paste bar and preview */
 .paste { margin-top: var(--space-6); display: grid; gap: var(--space-2); }
