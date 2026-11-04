@@ -1,0 +1,68 @@
+Make a 10-second whiteboard app promo: twenty-four interview notes land scattered across a dotted board, one click sorts them into four labeled themes, hand-drawn connectors link related themes, vote dots land, and a summary card names the top theme.
+
+<inputs>
+If I don't give you something, use the default and don't ask.
+- Product: Pinfold, an online whiteboard (fictional). Wordmark: "pinfold".
+- Board: "Onboarding interviews · Round 2"; corner info "24 notes · 5 interviews · 100%".
+- Participants and their note colors: P1 yellow, P2 pink, P3 mint, P4 sky, P5 apricot.
+- Notes by theme (text · participant · votes):
+  A "Setup takes too long": "Took 40 min to connect our bank" · P1 · 2; "CSV import failed twice" · P3 · 1; "Didn't know which plan to pick" · P2 · 1; "Waited 3 days for IT to turn on SSO" · P4 · 2; "Too many fields on signup" · P5 · 2; "Where do I invite my team?" · P1 · 0; "Gave up at step 4, came back next day" · P3 · 1.
+  B "Love the weekly digest": "Monday digest is the only email I read" · P2 · 2; "Forwarded the digest to my boss" · P4 · 1; "Digest got me back into the app" · P5 · 0; "Let me pick my digest day" · P1 · 2; "Digest charts are clear" · P3 · 0; "Want the digest in our team chat" · P2 · 0.
+  C "Pricing is confusing": "Seats or workspaces? Not sure" · P5 · 2; "Couldn't find the annual price" · P4 · 1; "Surprised by the overage fee" · P1 · 2; "Free tier limits unclear" · P2 · 0; "Needed a quote for 40 seats" · P3 · 0; "Compared 3 plans in a spreadsheet" · P4 · 2.
+  D "Mobile gaps": "Can't approve on my phone" · P5 · 2; "Charts cut off on mobile" · P1 · 0; "Login loop on tablet" · P3 · 0; "Want push alerts for approvals" · P4 · 1; "I use it on the train every day" · P2 · 0.
+- Vote totals: A 9, C 7, B 5, D 3 (24 votes: six teammates with four each).
+- Connectors: A to C labeled "plan choice blocks setup"; B to D labeled "digest pulls people onto mobile"; the summary card to A labeled "start here".
+- Summary card: "TOP THEME" · "Setup takes too long" · "7 notes · 9 votes · 5 of 5 interviews" · "SUGGESTED NEXT STEP" · "Cut signup to 3 fields and connect the bank later." · button "Share summary", which becomes "Link copied".
+- Toolbar button: "Cluster by theme", then "Clustering 24 notes", then "4 themes found".
+- Length: 10 seconds.
+</inputs>
+
+<direction>
+- Look: a bright, physical-feeling whiteboard, seen straight on: paper-colored notes with real weight and a slight curl, handwriting on the notes, crisp typed labels on the structure. The before is a believable mess; the after is calm and legible, and the motion between them is the product. Tactile, friendly, never cartoonish.
+- Palette: board #F5F3EE with a dot grid #D9D5CB (2px dots every 32px); ink #24221E; secondary #6E6A61; frame fill #ECE9E1 with a 2px dashed #B8B2A5 border (8px dashes, 6px gaps); note colors P1 #FFE07A, P2 #FFB8C9, P3 #A9E4C4, P4 #AFD5FF, P5 #FFC892; vote dots tomato #E4572E with a 2px white ring; the summary card ink #24221E with cream text #FFF8EA; toolbar white #FFFFFF with a 1px #E3DFD6 border. No gradients except each note's shading.
+- Type: Kalam 400 16px with a 20px line height for note text (ink #2B2925) and Kalam 700 21px for connector labels; Space Grotesk 500 and 600 for everything typed: the wordmark 22px, board name 18px, theme labels 24px, count chips 14px, the card (label 12px tracked 0.14em, theme 30px, details 15px, next step 16px, button 15px), toolbar 15px.
+- Notes: 128 × 128 squares, text inset 12px and wrapped by measuring words, top-left aligned; a 16px adhesive strip at the top 4% darker than the note; the bottom 30% shades 5% darker; two shadows, a tight one (0 2px 3px at 10%) and a soft curl shadow offset (3, 6) with a 10px blur at 12%, stronger toward the bottom-right corner. A lifted note's shadows grow to a 16px blur and a 10px offset.
+- Board chrome: the mark at x 40 (a tomato pushpin: a 14px circle on a short ink needle) and "pinfold" in Space Grotesk 600 at baseline y 56; the board name at x 180 on the same baseline; the corner info 15px secondary right-aligned to x 1880. The floating toolbar: a white pill x 700–1220, y 992–1048, radius 28, soft shadow, five 2px-stroke tool icons (select arrow, note, pen, circle, "T") from x 724, 44px apart, a 1px divider, and the button at x 980–1208, y 1000–1040 (ink fill, radius 20, a small four-point star and the label in cream).
+- The messy start: each note sits at a seeded position (centers inside x 120–1800, y 120–940, at least 110px apart, some overlapping by up to a third) with a seeded rotation between −9° and 9°.
+- The sorted layout, a 2 × 2 of frames around a center column:
+  - A x 150–746, y 130–498; B x 1174–1770, y 130–498; C x 150–746, y 600–968; D x 1174–1770, y 600–968 (each 596 × 368, radius 16).
+  - Inside each frame: the theme label at frame left + 24, baseline frame top + 44, with its count chip after it (#FFFFFF pill, 1px #D9D5CB border, "7 notes", later "7 notes · 9 votes"); notes fill rows of four from frame left + 24 and frame top + 76, 140px apart horizontally and vertically, in the list order, each settling at a seeded rotation between −1.5° and 1.5°.
+  - The summary card in the center column at x 790–1130, y 380–700, radius 16, a soft 24px shadow: "TOP THEME" at x 814, baseline y 418 in cream at 60%; the theme in two lines ("Setup takes" / "too long") at baselines y 458 and 494; details at y 528 in cream at 70%; a 1px cream-at-15% divider at y 548; the next-step label at y 574 and its text wrapped across baselines y 600 and 622; the button at x 814–1106, y 646–684 with a 1.5px cream outline, radius 19.
+- Connectors, drawn in marker: a 3px ink stroke whose width varies 2.6–3.4px, sampled every 12px along a curve with seeded ±1.2px wobble, round caps, an open arrowhead of two 16px strokes at 28°. A to C: an S-curve from (300, 506) down to (300, 592), its label at x 322, baseline y 556. B to D: from (1320, 506) to (1320, 592), its label at x 1342, baseline y 556. Card to A: an arc from the card's top edge at (850, 372) to A's right edge at (754, 300), its label at x 870, baseline y 340. Each draws along its length, then its label writes on with a left-to-right clip.
+- Vote dots: 16px, placed in a row along each voted note's bottom-right corner, 12px apart; each pops from scale 0 on easeOutBack (2.0) in 0.18 s.
+- Motion: a landing note drops from scale 1.12 to 1.0 on easeOutBack (1.4) in 0.22 s while its shadow tightens. A sorting note travels to its slot along a quadratic curve whose control point sits a seeded ±120px off the straight line, over 0.85 s on easeInOutCubic; it lifts to scale 1.06 at mid-flight with its shadow grown and lands with easeOutBack (1.3) on scale, its rotation easing to its settled angle. Frames trace their dashed outline clockwise from the top-left in 0.5 s while their fill fades in. Labels type at 45 characters per second.
+- The cursor: an original arrow drawn on the canvas, 24px, ink with a 2px white outline and a soft shadow; on a press it scales to 0.9 for 0.1 s and the button to 0.97.
+- Camera: still until 6.0 s, then a 2.5% push-in toward (960, 540) on easeInOutSine until 8.5 s, then still.
+- Premium: handwriting that reads, notes with weight and shadow, a sort that feels like many hands moving at once yet lands on a precise grid, a summary that says something specific. Cheap: emoji stickers, a rainbow of frame colors, notes that teleport or fade into place, comic sans, sparkle effects, a glowing AI button.
+- Banned: real company names, logos and UI copied from existing products (no clone of any real whiteboard's toolbar or icons), emoji, sparkles and glows, multiplayer cursors with name tags, gradient backgrounds, anything flashing more than 3 times per second.
+</direction>
+
+<structure>
+- 0.0–0.15s: the empty dotted board with the chrome and the toolbar.
+- 0.15–1.7s: the 24 notes land at their scattered spots in a seeded shuffled order, 58 ms apart.
+- 1.75–2.25s: the cursor glides from (1500, 860) to the button (1094, 1020), arriving at 2.15 s, and presses.
+- 2.25–2.55s: the button reads "Clustering 24 notes" with three dots appearing 0.08 s apart; every note wiggles once (+1.5° and back on a 0.25 s sine, with seeded 0–0.06 s offsets); the cursor slides away down-right and fades.
+- 2.55–4.15s: the notes fly to their slots, theme by theme (A, B, C, D) and in list order within each theme, 32 ms apart.
+- 3.6–4.1s: the four frames trace and fill, 0.08 s apart.
+- 3.9–4.4s: the labels type and the count chips pop in; the button reads "4 themes found" with a check.
+- 4.4–4.95s: the A–C connector draws (4.4–4.75 s), then B–D (4.55–4.9 s), each followed by its label.
+- 4.85–5.45s: the 24 vote dots pop in, 25 ms apart, theme by theme; each count chip extends to its votes.
+- 5.2–5.6s: the summary card rises 20px and fades in, its lines staggered 0.04 s.
+- 5.6–5.9s: the "start here" connector draws from the card to A, then its label.
+- 6.0s: the hero frame: four labeled frames holding all 24 notes, three connectors with labels, every vote dot, the summary card and the toolbar.
+- 6.4–7.2s: the cursor returns and clicks "Share summary" at 7.0 s; it becomes "Link copied" with a small check at 7.1 s.
+- 7.2–10.0s: hold; the push-in settles at 8.5 s and the final frame stays still.
+For other lengths, stretch the scattered landing and the pause before the click; keep each flight at about 0.85 s, the 32 ms stagger and at least 1 s of hold.
+</structure>
+
+<build>
+- One self-contained index.html (inline CSS and JS), a 1920×1080 (16:9) stage scaled to fit the window, designed for 60fps. No image, video, texture or model files: every note, shadow, icon and stroke is drawn in code.
+- window.seek(t), t in seconds, computes every visual from t alone: no CSS transitions or CSS animations, no setTimeout/setInterval, no state carried between frames, randomness only from a seeded PRNG. Anything cumulative is solved analytically from t or precomputed once at load at a fixed step. Past the end, seek clamps to the last frame.
+- Without ?render in the URL, drive seek from requestAnimationFrame so it plays in a browser (loop after a 1s end hold); with ?render, don't start that loop.
+- Google Fonts via <link> are fine; await document.fonts.load() for each face (Kalam 400 and 700; Space Grotesk 500 and 600) before defining window.seek.
+- Engine: Canvas 2D, repainting every frame from scratch, the backing store sized from CSS size × devicePixelRatio. Canvas won't fetch fonts itself, so the awaited loads matter. At load, precompute each note's scattered position and rotation, its slot, its curve's control point and its wrapped text lines; seek(t) only reads them. Draw notes in flight above settled ones, ordered by their start time, so no note ever pops under another mid-flight.
+</build>
+
+<check>
+Before showing me, step through one frame per second (t = 0…10): screenshot each and look at it. Fix overlaps, clipped or cramped text, and anything off-style or Banned. Check that at 1.7 s all 24 notes are on the board and every note's text is readable inside its square; at 4.2 s every note sits in the right frame in rows of four with none overlapping; the vote dots per theme add up to 9, 5, 7 and 3 and the chips say so; the connector labels sit clear of notes and frames; nothing crosses the summary card; nothing flashes; the 6.0 s frame shows all four themes, three connectors, the dots and the card; and the final frame shows "Link copied". Confirm seek(10) and seek(11) match, so the final frame holds.
+</check>
