@@ -223,7 +223,7 @@ Agents given a hub URL can read cards with a read-only token through `llms.txt`,
 
 ## Progress
 
-- [ ] **1. Hub shell**: repo, GitHub + Vercel link, Supabase `hub` project, OTP login for the allowed email with 90-day sessions, access guard, robots, shared layout (top bar, side nav, mobile sheet, theme toggle, LinkedIn and GitHub icons), placeholder pages for all routes. Done when all routes load behind login on the Vercel URL.
+- [ ] **1. Hub shell**: repo, GitHub + Vercel link, Supabase `hub` project, password login for the allowed email with 180-day sessions, access guard, robots, shared layout (top bar, side nav, mobile sheet, theme toggle, LinkedIn and GitHub icons), placeholder pages for all routes. Done when all routes load behind login on the Vercel URL.
   - Code done (shell, OTP login, guard + tests, placeholders, robots). Still manual: GitHub repo push, Supabase `hub` project + env vars, Vercel link.
 - [ ] **2. Notepad**: notepad sync, archive on clear and on conflict, word count, copy, download, PWA manifest and service worker. Done when phone typing shows on the laptop within seconds.
 - [ ] **3. Card schema + mirror + skill**: `cards`, `capture_tasks` and RLS, the worker role, mirror generator with `pnpm sync`, `design-library` skill (trigger, ask-gate, DESIGN.md write-back, `used_in`, slop gate), and the global symlink.

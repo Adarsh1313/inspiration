@@ -30,7 +30,7 @@ Input for `/to-spec`. Design is fixed in design/DESIGN.md. Research: docs/resear
 ## Round 3 (2026-11-04)
 24. **Worker schedule**: runs at logon, then every 2 h, and exits immediately when there are no jobs. Run by hand with `pnpm capture:pending` or `/add-ref`. Supabase Free has no request cap; the only free-tier risk is the 7-day inactivity pause, which daily use avoids.
 25. **`/enrich-cards`**: a Claude Code command. It finds cards missing summary/tags/mood/reuse, reads each source, drafts them all in one table for approval, then writes straight to Supabase (no redeploy).
-26. **Login**: 6-digit email OTP only (no magic link, so it works in the iOS PWA); 90-day session per device.
+26. **Login**: ~~6-digit email OTP~~ superseded by decision 35: email + password. Session cookie lasts 180 days per device.
 27. **Notepad sync**: last write wins, debounced 500 ms, with Realtime live updates. An offline edit that conflicts with a newer server version is kept as an archived copy.
 28. **Mirror**: the worker refreshes `design-library/` at the end of every run, plus `pnpm sync` by hand.
 29. **Cursor**: not installed. v1 supports Claude Code only; the Cursor rule is documented but not installed.
@@ -42,3 +42,4 @@ Input for `/to-spec`. Design is fixed in design/DESIGN.md. Research: docs/resear
 33. **Agent token**: stored as a Vercel env var and rotated with `pnpm token:rotate`. No settings page in v1.
 34. **Spec scope**: one spec covering all milestones 1–9. Jobs ships at PRD v1 scope: paste bar, preview (company, role, location, posting date), statuses to apply / applied / interviewing / closed, and a pasted-text or screenshot fallback for LinkedIn. Cold email is a placeholder page.
 - Settled without asking: `kind` and `shelf` are separate fields (`kind` gains `person`). The `N` key adds a note on /thoughts.
+35. **Password login (replaces 26)**: Supabase locks email templates without custom SMTP, so the default Magic link email has no code. Login is email + password (`signInWithPassword`), only for the allowed email, session cookie 180 days and refreshed on use. Add Resend SMTP later if OTP is wanted again.

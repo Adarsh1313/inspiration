@@ -8,7 +8,7 @@ export default function LoginPage() {
     <main className="login">
       <div className="login-card">
         <h1 className="page-title">inspiration</h1>
-        <p className="lede">Private. Log in with a code sent to your email.</p>
+        <p className="lede">Private. Log in to continue.</p>
         <LoginForm />
       </div>
     </main>
