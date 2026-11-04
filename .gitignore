@@ -1,0 +1,7 @@
+node_modules/
+.next/
+.env*
+!.env.example
+.vercel/
+design-library/refs/*/clip.mp4
+design-library/refs/*/frames/

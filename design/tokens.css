@@ -1,0 +1,123 @@
+/* Personal hub tokens. Components use these only: no raw hex or px. */
+
+:root {
+  /* Type */
+  --font-serif: var(--font-geist-serif), ui-serif, Georgia, serif;
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --text-xs: 0.75rem;    /* 12 — mono counts, chips */
+  --text-sm: 0.8125rem;  /* 13 — nav, top bar, meta */
+  --text-base: 0.875rem; /* 14 — body, intro, card titles */
+  --text-md: 1rem;       /* 16 — shelf headings */
+  --text-lg: 1.375rem;   /* 22 — page heading */
+  --text-xl: 2rem;       /* 32 — card page title */
+
+  --leading-tight: 1.2;
+  --leading-body: 1.6;
+  --tracking-tight: -0.01em;
+  --weight-regular: 400;
+  --weight-medium: 500;
+
+  /* Space (4-based) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.75rem;
+  --space-7: 2.5rem;
+  --space-8: 3.5rem;
+  --space-9: 6rem;
+  --gutter: clamp(1rem, 5vw, 1.75rem);
+
+  /* Layout */
+  --topbar-h: 3.375rem;
+  --sidenav-w: 13.5rem;
+  --content-max: 60rem;
+  --prose-max: 35rem;
+  --card-min: 15rem;
+
+  /* Shape */
+  --radius-sm: 0.375rem;  /* chips, inputs */
+  --radius-md: 0.5rem;    /* nav pill, buttons */
+  --radius-lg: 0.75rem;   /* cards */
+  --radius-full: 999px;
+  --hairline: 1px;
+
+  /* Colour: light */
+  --bg: oklch(0.995 0 0);
+  --surface: oklch(1 0 0);
+  --surface-sunken: oklch(0.975 0.002 260);
+  --pill: oklch(0.955 0.003 260);
+  --ink: oklch(0.18 0.005 260);
+  --ink-muted: oklch(0.52 0.006 260);
+  --ink-faint: oklch(0.68 0.005 260);
+  --line: oklch(0.92 0.003 260);
+  --line-strong: oklch(0.86 0.004 260);
+  --accent: oklch(0.55 0.15 255);
+  --accent-ink: oklch(0.99 0 0);
+  --danger: oklch(0.55 0.17 27);
+  --topbar-bg: oklch(0.995 0 0 / 0.82);
+
+  --shadow-card: 0 0 0 var(--hairline) oklch(0 0 0 / 0.06), 0 1px 2px -1px oklch(0 0 0 / 0.06), 0 2px 4px 0 oklch(0 0 0 / 0.04);
+  --shadow-lift: 0 1px 2px oklch(0 0 0 / 0.03), 0 10px 28px -16px oklch(0 0 0 / 0.14);
+  --focus-ring: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+
+  /* Motion: light. Hover, filter, theme, sheet only. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --dur-fast: 120ms;  /* hover colour, press */
+  --dur-base: 200ms;  /* summary fade, filter reflow */
+  --dur-slow: 320ms;  /* mobile nav sheet */
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: oklch(0.155 0.004 260);
+    --surface: oklch(0.19 0.004 260);
+    --surface-sunken: oklch(0.13 0.004 260);
+    --pill: oklch(0.24 0.005 260);
+    --ink: oklch(0.95 0.003 260);
+    --ink-muted: oklch(0.68 0.006 260);
+    --ink-faint: oklch(0.52 0.006 260);
+    --line: oklch(0.26 0.005 260);
+    --line-strong: oklch(0.32 0.006 260);
+    --accent: oklch(0.72 0.13 255);
+    --accent-ink: oklch(0.16 0.01 260);
+    --danger: oklch(0.7 0.15 27);
+    --topbar-bg: oklch(0.155 0.004 260 / 0.82);
+    --shadow-card: 0 0 0 var(--hairline) oklch(1 0 0 / 0.07);
+    --shadow-lift: 0 0 0 var(--hairline) oklch(1 0 0 / 0.1), 0 12px 32px -16px oklch(0 0 0 / 0.6);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: oklch(0.155 0.004 260);
+  --surface: oklch(0.19 0.004 260);
+  --surface-sunken: oklch(0.13 0.004 260);
+  --pill: oklch(0.24 0.005 260);
+  --ink: oklch(0.95 0.003 260);
+  --ink-muted: oklch(0.68 0.006 260);
+  --ink-faint: oklch(0.52 0.006 260);
+  --line: oklch(0.26 0.005 260);
+  --line-strong: oklch(0.32 0.006 260);
+  --accent: oklch(0.72 0.13 255);
+  --accent-ink: oklch(0.16 0.01 260);
+  --danger: oklch(0.7 0.15 27);
+  --topbar-bg: oklch(0.155 0.004 260 / 0.82);
+  --shadow-card: 0 0 0 var(--hairline) oklch(1 0 0 / 0.07);
+  --shadow-lift: 0 0 0 var(--hairline) oklch(1 0 0 / 0.1), 0 12px 32px -16px oklch(0 0 0 / 0.6);
+  color-scheme: dark;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur-base: 0ms;
+    --dur-slow: 0ms;
+  }
+}
