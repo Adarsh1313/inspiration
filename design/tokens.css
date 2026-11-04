@@ -70,6 +70,13 @@
   --note-apricot: oklch(0.94 0.06 60);
   --note-ink: oklch(0.25 0.01 260);
 
+  /* Gallery */
+  --menu-w: 12.5rem;
+  --facts-label-w: 7rem;
+  --dial-label-w: 5rem;
+  --media-ink: oklch(0.99 0 0);
+  --media-scrim: linear-gradient(to top, oklch(0 0 0 / 0.78), oklch(0 0 0 / 0));
+
   /* Thoughts wall */
   --note-size: 8rem;
   --font-hand: var(--font-kalam), "Segoe Print", "Bradley Hand", cursive;

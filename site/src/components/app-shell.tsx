@@ -6,11 +6,12 @@ import { useEffect, useState } from "react";
 import { Briefcase, Lightbulb, Mail, Menu, NotebookPen, Palette, X, type LucideIcon } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "./icons";
 import { ThemeToggle } from "./theme-toggle";
-import { NAV_ITEMS, isActive } from "./nav-items";
+import type { NavCounts } from "@/lib/cards-store";
+import { isActive, navItems, shelfItems, showsShelves } from "./nav-items";
 
 const ICONS: Record<string, LucideIcon> = { design: Palette, jobs: Briefcase, email: Mail, thoughts: Lightbulb, notepad: NotebookPen };
 
-export function AppShell({ children }: { children: React.ReactNode }) {
+export function AppShell({ children, counts }: { children: React.ReactNode; counts: NavCounts }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -33,7 +34,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             {open ? <X size={16} strokeWidth={1.5} /> : <Menu size={16} strokeWidth={1.5} />}
           </button>
           <Link href="/design" className="mark">inspiration</Link>
-          <span className="version">v0.3.0</span>
+          <span className="version">v0.5.0</span>
         </div>
         <div className="topbar-right">
           <ThemeToggle />
@@ -49,7 +50,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="sheet-scrim" data-open={open} onClick={() => setOpen(false)} />
         <nav id="sidenav" className="sidenav" data-open={open} aria-label="Primary">
           <ul className="navlist">
-            {NAV_ITEMS.map((item) => {
+            {navItems(counts).map((item) => {
               const Icon = ICONS[item.icon];
               return (
                 <li key={item.href} className={item.sub ? "sub" : undefined}>
@@ -58,6 +59,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     <span className="label">{item.label}</span>
                     <span className="count">{item.count}</span>
                   </Link>
+                  {item.href === "/design" && showsShelves(pathname) && (
+                    <ul className="shelf-nav" aria-label="Shelves">
+                      {shelfItems(counts).map((s) => (
+                        <li key={s.shelf}>
+                          <Link href={s.href} className="navlink" aria-current={pathname === s.href ? "page" : undefined}>
+                            <span className="label">{s.label}</span>
+                            <span className="count">{s.count}</span>
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </li>
               );
             })}

@@ -14,6 +14,11 @@ export type AccessInput = {
 
 const PUBLIC_PATHS = new Set(["/login", "/robots.txt", "/manifest.webmanifest", "/sw.js"]);
 
+/** The card page itself (not .md): an agent given a card URL and the token reads its JSON-LD. */
+export function isCardPage(pathname: string): boolean {
+  return /^\/r\/[^/.]+$/.test(pathname);
+}
+
 export function isMachineRoute(pathname: string): boolean {
   return pathname === "/llms.txt" || pathname === "/api/refs.json" || /^\/r\/[^/]+\.md$/.test(pathname);
 }
@@ -34,6 +39,7 @@ export function decideAccess({ pathname, hasSession, token, readToken }: AccessI
     const ok = !!readToken && !!token && safeEqual(token, readToken);
     return ok ? { type: "allow" } : { type: "unauthorized" };
   }
+  if (isCardPage(pathname) && !!readToken && !!token && safeEqual(token, readToken)) return { type: "allow" };
   if (pathname.startsWith("/api/")) return { type: "unauthorized" };
   return { type: "redirect-login" };
 }

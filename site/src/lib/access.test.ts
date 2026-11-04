@@ -43,6 +43,12 @@ describe("decideAccess", () => {
     expect(decideAccess({ ...base, pathname: "/design", token: "s3cret" })).toEqual({ type: "redirect-login" });
   });
 
+  it("lets an agent with the token read a card page, but sends everyone else to login", () => {
+    expect(decideAccess({ ...base, pathname: "/r/orbkit", token: "s3cret" })).toEqual({ type: "allow" });
+    expect(decideAccess({ ...base, pathname: "/r/orbkit", token: "nope" })).toEqual({ type: "redirect-login" });
+    expect(decideAccess({ ...base, pathname: "/r/orbkit" })).toEqual({ type: "redirect-login" });
+  });
+
   it("returns 401 (not a redirect) for other API routes without a session", () => {
     expect(decideAccess({ ...base, pathname: "/api/capture" })).toEqual({ type: "unauthorized" });
     expect(decideAccess({ ...base, pathname: "/api/capture", token: "s3cret" })).toEqual({ type: "unauthorized" });
