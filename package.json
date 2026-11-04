@@ -1,0 +1,11 @@
+{
+  "name": "inspiration",
+  "private": true,
+  "packageManager": "pnpm@12.5.1",
+  "scripts": {
+    "dev": "pnpm --filter site dev",
+    "build": "pnpm --filter site build",
+    "test": "pnpm --filter site test",
+    "typecheck": "pnpm --filter site typecheck"
+  }
+}

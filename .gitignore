@@ -5,3 +5,4 @@ node_modules/
 .vercel/
 design-library/refs/*/clip.mp4
 design-library/refs/*/frames/
+*.tsbuildinfo
