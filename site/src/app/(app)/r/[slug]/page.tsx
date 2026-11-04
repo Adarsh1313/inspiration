@@ -48,7 +48,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   const jsonLd = jsonLdScript(cardJsonLd(card, { baseUrl }));
 
   const isDirectory = card.kind === "directory";
-  const checklistText = card.shelf === "anti-slop" ? card.notes?.trim() : undefined;
+  const checklistText = card.shelf === "anti-slop" || /slop/.test(card.slug) ? card.notes?.trim() : undefined;
   const checked = formatDate(card.last_checked);
 
   return (
@@ -75,7 +75,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
       <div className="card-media">
         {previewUrl ? (
-          <video src={previewUrl} poster={posterUrl ?? undefined} controls muted loop playsInline preload="metadata" />
+          <video src={previewUrl} poster={posterUrl ?? undefined} controls muted loop playsInline preload="none" />
         ) : posterUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={posterUrl} alt="" />

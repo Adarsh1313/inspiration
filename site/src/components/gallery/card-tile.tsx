@@ -192,7 +192,7 @@ export function CardTile({ card, priority = false }: { card: GalleryCard; priori
 
       <div className="tile-foot">
         <SourceIcon type={card.source_type} />
-        <a className="tile-title" href={href} target="_blank" rel="noopener noreferrer" title={SOURCE_LABEL[card.source_type]}>
+        <a className="tile-title" href={href} target="_blank" rel="noopener noreferrer" title={SOURCE_LABEL[card.source_type]} onPointerDown={onPointerDown} onClick={onMediaClick}>
           {card.title || card.slug}
         </a>
         <a className="icon-btn tile-open" href={cardHref} aria-label={`Open the card page for ${card.title || card.slug}`} title="Card page">

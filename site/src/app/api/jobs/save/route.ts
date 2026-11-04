@@ -71,6 +71,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ id: saved.id }, { status: 201 });
   } catch (e) {
     if (e instanceof CaptureError) return NextResponse.json({ error: e.message }, { status: 400 });
-    return NextResponse.json({ error: "Could not save that posting. Has migration 0008 been applied?" }, { status: 500 });
+    return NextResponse.json({ error: "Could not save that posting. Try again." }, { status: 500 });
   }
 }
