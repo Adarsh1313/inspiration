@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import type { MediaStore } from "./worker/media-store";
 
@@ -18,17 +18,32 @@ export function mirrorFiles(c: MediaCard): { path: string; object: string }[] {
   return files;
 }
 
-/** Copies media for active cards from Storage into the mirror. Existing files are left alone (names are hashed, so they never change). */
+const MANIFEST = ".media-manifest.json";
+
+/**
+ * Copies media for active cards from Storage into the mirror. Mirror file names are fixed (poster.jpg...),
+ * so a manifest records which Storage object each file came from; a file is re-copied when its object changed.
+ */
 export async function copyMedia(cards: MediaCard[], outDir: string, media: MediaStore): Promise<number> {
+  const manifestPath = join(outDir, MANIFEST);
+  let manifest: Record<string, string> = {};
+  try {
+    manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
+  } catch {
+    // first run or unreadable: start fresh
+  }
   let copied = 0;
   for (const card of cards.filter((c) => c.status === "active")) {
     for (const f of mirrorFiles(card)) {
       const target = join(outDir, f.path);
-      if (existsSync(target)) continue;
+      if (existsSync(target) && manifest[f.path] === f.object) continue;
       mkdirSync(dirname(target), { recursive: true });
       writeFileSync(target, await media.get(f.object));
+      manifest[f.path] = f.object;
       copied++;
     }
   }
+  mkdirSync(outDir, { recursive: true });
+  writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
   return copied;
 }

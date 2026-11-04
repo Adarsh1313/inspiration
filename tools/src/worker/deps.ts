@@ -3,7 +3,8 @@ import { createWriteStream, mkdirSync, readdirSync, readFileSync } from "node:fs
 import { join } from "node:path";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
-import { assertPublicUrl, draft } from "@hub/capture";
+import { lookup } from "node:dns/promises";
+import { assertPublicUrl, draft, isBlockedIp } from "@hub/capture";
 import { run } from "./ffmpeg";
 import type { MediaStore } from "./media-store";
 import { HttpError, ToolError } from "./retry";
@@ -15,8 +16,23 @@ const UA = "Mozilla/5.0 (compatible; HubWorker/0.1; personal use)";
 const MAX_DOWNLOAD_BYTES = 300 * 1024 * 1024;
 
 async function download(url: string, dest: string): Promise<{ contentType: string }> {
-  const safe = assertPublicUrl(url);
-  const res = await fetch(safe, { headers: { "user-agent": UA }, signal: AbortSignal.timeout(120_000) });
+  const signal = AbortSignal.timeout(120_000);
+  let res: Response | undefined;
+  let current = url;
+  // Follow redirects by hand so every hop is checked, not just the first URL.
+  for (let hop = 0; hop <= 5; hop++) {
+    const safe = assertPublicUrl(current);
+    const ips = (await lookup(safe.hostname.replace(/^[|]$/g, ""), { all: true })).map((a) => a.address);
+    if (ips.length === 0 || ips.some(isBlockedIp)) throw new ToolError("That address is not public.");
+    res = await fetch(safe, { headers: { "user-agent": UA }, signal, redirect: "manual" });
+    const next = res.headers.get("location");
+    if (res.status >= 300 && res.status < 400 && next) {
+      current = new URL(next, safe).href;
+      continue;
+    }
+    break;
+  }
+  if (!res || (res.status >= 300 && res.status < 400)) throw new ToolError("Too many redirects.");
   if (!res.ok || !res.body) throw new HttpError(res.status);
   const declared = Number(res.headers.get("content-length"));
   if (declared > MAX_DOWNLOAD_BYTES) throw new ToolError("That file is over 300 MB.");

@@ -1,4 +1,4 @@
-import { existsSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
@@ -23,7 +23,7 @@ describe("mirrorFiles", () => {
 });
 
 describe("copyMedia", () => {
-  it("copies media for active cards only, and leaves existing files alone", async () => {
+  it("copies media for active cards only, skips unchanged files and replaces changed ones", async () => {
     const media = new MemoryMediaStore();
     const poster = await media.put("poster", new Uint8Array([1, 2, 3]), "jpg", "image/jpeg");
     const out = mkdtempSync(join(tmpdir(), "hub-mirror-"));
@@ -33,8 +33,10 @@ describe("copyMedia", () => {
     expect([...readFileSync(join(out, "refs/loader/poster.jpg"))]).toEqual([1, 2, 3]);
     expect(existsSync(join(out, "refs/draft-one/poster.jpg"))).toBe(false);
 
-    writeFileSync(join(out, "refs/loader/poster.jpg"), "keep");
-    expect(await copyMedia(cards, out, media)).toBe(0);
-    expect(readFileSync(join(out, "refs/loader/poster.jpg"), "utf8")).toBe("keep");
+    expect(await copyMedia(cards, out, media)).toBe(0); // same object: left alone
+
+    const newer = await media.put("poster", new Uint8Array([9, 9]), "jpg", "image/jpeg");
+    expect(await copyMedia([card({ poster_sm: newer })], out, media)).toBe(1); // new object: replaced
+    expect([...readFileSync(join(out, "refs/loader/poster.jpg"))]).toEqual([9, 9]);
   });
 });

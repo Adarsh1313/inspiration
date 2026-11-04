@@ -225,6 +225,20 @@ describe.skipIf(!hasFfmpeg)("worker media steps (real ffmpeg)", () => {
     expect(tasks.tasks[0].status).toBe("failed");
   });
 
+  it("keeps going when one card blows up, failing only that card's tasks", async () => {
+    const { tasks, deps } = setup(["download"]);
+    tasks.addCard({ id: "c2", slug: "second", source_url: baseDraft.canonicalUrl }, ["download"]);
+    const getCard = tasks.getCard.bind(tasks);
+    tasks.getCard = async (id) => {
+      if (id === "c1") throw new Error("db blip");
+      return getCard(id);
+    };
+    const summary = await runPending(deps);
+    expect(summary).toMatchObject({ cards: 2, done: 1, failed: 1 });
+    expect(tasks.tasks.find((t) => t.card_id === "c1")).toMatchObject({ status: "failed", last_error: "db blip" });
+    expect(tasks.tasks.find((t) => t.card_id === "c2")?.status).toBe("done");
+  });
+
   it("stores a YouTube transcript", async () => {
     const { tasks, deps } = setup(["transcript"], { ytdlp: { video: async () => null, transcript: async () => "hello world" } });
     await runPending(deps);

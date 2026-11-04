@@ -22,20 +22,11 @@ async function finalizeCard(deps: Deps, cardId: string): Promise<void> {
   }
 }
 
-/** Claims queued tasks and runs them card by card, one step at a time, in dependency order. Exits when idle. */
-export async function runPending(deps: Deps): Promise<RunSummary> {
-  const claimed = await deps.tasks.claim(CLAIM_LIMIT, LEASE_MS);
-  const summary: RunSummary = { claimed: claimed.length, done: 0, failed: 0, cards: 0 };
-
-  const byCard = new Map<string, Task[]>();
-  for (const t of claimed) byCard.set(t.card_id, [...(byCard.get(t.card_id) ?? []), t]);
-
-  for (const [cardId, tasks] of byCard) {
-    summary.cards++;
-    const card = await deps.tasks.getCard(cardId);
-    const ctx = makeContext(card, deps);
+async function runCard(deps: Deps, cardId: string, tasks: Task[], summary: RunSummary, finished: Set<string>): Promise<void> {
+  const card = await deps.tasks.getCard(cardId);
+  const ctx = makeContext(card, deps);
+  try {
     tasks.sort((a, b) => STEP_ORDER.indexOf(a.step) - STEP_ORDER.indexOf(b.step));
-
     for (const task of tasks) {
       const budget = Math.max(1, MAX_ATTEMPTS - task.attempts);
       const result = await withRetry(() => STEPS[task.step](ctx), { max: budget, sleep: deps.sleep });
@@ -50,9 +41,37 @@ export async function runPending(deps: Deps): Promise<RunSummary> {
         summary.failed++;
         deps.log?.(`${card.slug}: ${task.step} failed (${error})`);
       }
+      finished.add(task.id);
     }
     await finalizeCard(deps, cardId);
+  } finally {
     rmSync(ctx.dir, { recursive: true, force: true });
+  }
+}
+
+/** Claims queued tasks and runs them card by card, one step at a time, in dependency order. Exits when idle. */
+export async function runPending(deps: Deps): Promise<RunSummary> {
+  const claimed = await deps.tasks.claim(CLAIM_LIMIT, LEASE_MS);
+  const summary: RunSummary = { claimed: claimed.length, done: 0, failed: 0, cards: 0 };
+
+  const byCard = new Map<string, Task[]>();
+  for (const t of claimed) byCard.set(t.card_id, [...(byCard.get(t.card_id) ?? []), t]);
+
+  for (const [cardId, tasks] of byCard) {
+    summary.cards++;
+    const finished = new Set<string>();
+    try {
+      await runCard(deps, cardId, tasks, summary, finished);
+    } catch (e) {
+      // One bad card must not strand the other claimed tasks until the lease expires.
+      const error = describeError(e, "fail");
+      deps.log?.(`card ${cardId}: ${error}`);
+      for (const t of tasks.filter((x) => !finished.has(x.id))) {
+        await deps.tasks.finish(t.id, { status: "failed", attempts: t.attempts + 1, error }).catch(() => {});
+        summary.failed++;
+      }
+      await finalizeCard(deps, cardId).catch(() => {});
+    }
   }
   return summary;
 }
