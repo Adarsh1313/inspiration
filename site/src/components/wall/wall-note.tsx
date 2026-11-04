@@ -35,8 +35,6 @@ export function WallNoteView({ note, isNew, flight, onPatch, onDelete, onMoved, 
   const patchRef = useRef(onPatch);
   patchRef.current = onPatch;
 
-  useEffect(() => setPos({ x: note.x, y: note.y }), [note.x, note.y]);
-
   useEffect(() => {
     if (editing) {
       onEditing(true);
@@ -99,8 +97,9 @@ export function WallNoteView({ note, isNew, flight, onPatch, onDelete, onMoved, 
     else setEditing(true); // a plain click edits the text
   }
 
-  const x = flight?.x ?? pos.x;
-  const y = flight?.y ?? pos.y;
+  // Position comes from props except while this note is being dragged, so nothing blinks back after a drop or a tidy.
+  const x = flight?.x ?? (dragging ? pos.x : note.x);
+  const y = flight?.y ?? (dragging ? pos.y : note.y);
   const rotation = flight?.rotation ?? note.rotation;
   const scale = flight?.scale ?? 1;
   const lifted = dragging || (flight !== undefined && scale > 1);
@@ -114,6 +113,13 @@ export function WallNoteView({ note, isNew, flight, onPatch, onDelete, onMoved, 
       style={{
         transform: `translate(${x}px, ${y}px) rotate(${rotation}deg)`,
         zIndex: (note.pinned ? 10000 : 0) + note.z + (dragging ? 100000 : 0),
+      }}
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.target === e.currentTarget && (e.key === "Enter" || e.key === "F2")) {
+          e.preventDefault();
+          setEditing(true);
+        }
       }}
       onPointerDown={down}
       onPointerMove={move}

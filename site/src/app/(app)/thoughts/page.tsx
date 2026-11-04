@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 export default async function Page() {
   const supabase = await serverClient();
   const [notes, groups] = await Promise.all([
-    supabase.from("notes").select(NOTE_COLUMNS).order("created_at"),
+    supabase.from("notes").select(NOTE_COLUMNS).eq("status", "active").order("created_at"),
     supabase.from("note_groups").select("*").order("created_at"),
   ]);
 

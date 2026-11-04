@@ -73,6 +73,7 @@ export function Wall({ initialNotes, initialGroups }: { initialNotes: WallNote[]
   const frames = useCallback(() => groupsRef.current.map((g) => ({ id: g.id, x: g.x, y: g.y, w: g.w, h: g.h })), []);
 
   const add = useCallback(async (at?: Point) => {
+    if (raf.current) return; // a tidy is running
     const current = notesRef.current;
     const counts: Record<string, number> = {};
     for (const n of current) counts[n.colour] = (counts[n.colour] ?? 0) + 1;
@@ -110,10 +111,14 @@ export function Wall({ initialNotes, initialGroups }: { initialNotes: WallNote[]
 
   /** After a frame changes size, notes whose centre is now inside (or outside) join (or leave) it. */
   const refreshMembership = useCallback(
-    (nextFrames: { id: string; x: number; y: number; w: number; h: number }[]) => {
+    (before: { id: string; x: number; y: number; w: number; h: number }[], after: { id: string; x: number; y: number; w: number; h: number }[]) => {
       for (const n of notesRef.current) {
-        const g = snapIntoGroup(n, nextFrames);
-        if (g !== n.group_id) void patch(n.id, { group_id: g });
+        const g = snapIntoGroup(n, after);
+        if (g === n.group_id) continue;
+        // A note placed in a group by Tidy or /cluster-thoughts need not sit inside the frame yet: only change
+        // membership for notes that were geometrically in sync with the old frames, or that now sit inside one.
+        const inSync = snapIntoGroup(n, before) === n.group_id;
+        if (g !== null || inSync) void patch(n.id, { group_id: g });
       }
     },
     [patch],
@@ -166,10 +171,11 @@ export function Wall({ initialNotes, initialGroups }: { initialNotes: WallNote[]
 
   const resizeGroup = useCallback(
     async (id: string, w: number, h: number) => {
+      const before = frames();
       await patchGroup(id, { w, h });
-      refreshMembership(groupsRef.current.map((g) => ({ id: g.id, x: g.x, y: g.y, w: g.w, h: g.h })));
+      refreshMembership(before, frames());
     },
-    [patchGroup, refreshMembership],
+    [patchGroup, refreshMembership, frames],
   );
 
   const tidy = useCallback(() => {

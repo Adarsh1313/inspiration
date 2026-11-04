@@ -5,7 +5,7 @@ import { Trash2 } from "lucide-react";
 import type { Point } from "@/lib/wall/placement";
 import { WALL, type WallGroup } from "@/lib/wall/model";
 
-const MIN_W = 240;
+const MIN_W = 596; // room for a row of four notes (matches the tidy layout)
 const MIN_H = 200;
 const DRAG_THRESHOLD = 4;
 
@@ -95,7 +95,7 @@ export function WallFrame({ group, offset, autoFocus, typedChars, traceKey, onDr
           <rect x="0" y="0" width="100%" height="100%" rx="12" pathLength="1" />
         </svg>
       )}
-      <div className="wall-frame-bar" onPointerDown={bar} onPointerMove={barMove} onPointerUp={barUp}>
+      <div className="wall-frame-bar" onPointerDown={bar} onPointerMove={barMove} onPointerUp={barUp} onPointerCancel={() => { drag.current = null; onDragEnd(group.id, 0, 0); }}>
         {typedChars === undefined ? (
           <input
             ref={input}
