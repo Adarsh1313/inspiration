@@ -72,6 +72,6 @@ Sources: docs/reference/thoughts-wall/whiteboard-sticky-clusters.mp4 (motion ref
 
 ## Progress
 
-- [ ] **A. Wall and notes**: migration (positions, groups table), wall layout under the page header, click-on-empty and `N` and top-right button to add, drop-in, drag with lift, in-place edit, colour swatches with the random picker, pin, delete, reduced motion, Kalam and tokens. Done when the wall persists and feels right on desktop and phone.
-- [ ] **B. Groups and Tidy**: frames (create, rename, move, resize, delete), note-to-group membership, the Tidy flight with frames tracing and labels typing.
-- [ ] **C. `/cluster-thoughts`**: the Claude Code command, group writes on approval, the new frames playing the Tidy animation.
+- [x] **A. Wall and notes**: migration (positions, groups table), wall layout under the page header, click-on-empty and `N` and top-right button to add, drop-in, drag with lift, in-place edit, colour swatches with the random picker, pin, delete, reduced motion, Kalam and tokens. Done when the wall persists and feels right on desktop and phone.
+- [x] **B. Groups and Tidy**: frames (create, rename, move, resize, delete), note-to-group membership, the Tidy flight with frames tracing and labels typing.
+- [x] **C. `/cluster-thoughts`**: the Claude Code command, group writes on approval, the new frames playing the Tidy animation.

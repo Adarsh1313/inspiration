@@ -13,6 +13,7 @@
     "capture:add": "tsx src/capture-add.ts",
     "seed": "tsx src/seed.ts",
     "enrich": "tsx src/enrich.ts",
+    "cluster": "tsx src/cluster.ts",
     "install:commands": "tsx src/install-commands.ts"
   },
   "dependencies": {

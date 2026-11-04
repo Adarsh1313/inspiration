@@ -14,6 +14,7 @@
     "capture:add": "pnpm --filter tools capture:add",
     "seed": "pnpm --filter tools seed",
     "enrich": "pnpm --filter tools enrich",
+    "cluster": "pnpm --filter tools cluster",
     "install:commands": "pnpm --filter tools install:commands"
   }
 }

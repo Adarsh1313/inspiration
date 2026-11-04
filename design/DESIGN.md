@@ -50,3 +50,10 @@ One stroke icon set at 1.5 stroke and 16px (Lucide or similar), coloured `--ink-
 ## Open questions
 - Accent hue: the restrained blue is a placeholder; swap it in `tokens.css` if you have a preference.
 - Site name and version tag for the top-left mark (PRD hub question).
+
+## Thoughts wall (/thoughts)
+A physical wall of sticky notes, the one place with richer motion. Spec: docs/specs/thoughts-wall.md.
+- **Wall**: `--surface-sunken` with a dot grid (`--line-strong`, 2rem pitch) inside a hairline-bordered, `--radius-lg` area that scrolls. Notes and frames are positioned in wall pixels (1600 x 1000).
+- **Note**: `--note-size` square, five colours (`--note-yellow/pink/green/blue/apricot`), Kalam (`--font-hand`) text, a 4% darker adhesive strip, bottom 30% shaded 5% darker, `--shadow-note`. New notes get a colour that is not either of the last two and favours the least used.
+- **Frame (group)**: dashed `--line-strong` border on `--surface`, name in Geist Sans medium, hover-only delete, resize grip bottom right.
+- **Motion** (allowed here only): drop-in (`--drop-scale` to 1 over `--dur-drop`, `--ease-back`), drag lift (`--lift-scale`, `--shadow-note-lift`), Tidy flight (0.85 s quadratic curve, 32 ms stagger, lift at mid-flight), frame outline trace (`--dur-trace`), label type-on at 45 characters per second. All of it is skipped under reduced motion (durations are 0 and Tidy places notes immediately).
