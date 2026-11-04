@@ -236,7 +236,8 @@ Agents given a hub URL can read cards with a read-only token through `llms.txt`,
   - Code done: `pnpm seed` (try `--dry-run`), `pnpm enrich list|apply`, `/enrich-cards`. Left unticked because the 50 cards are not in yet: after the 4b manual steps run `pnpm seed`, then `/enrich-cards`.
 - [ ] **5. Design gallery**: shelves with counts, side-nav shelf expansion, `/design/[shelf]`, source chips, grid with poster, hover clip and summary, touch behaviour, tag and mood filters in the URL, card page with JSON-LD, card menu (pin, copy, open, archive, delete), inline editing, Archived filter, directory badge, slop card Copy button.
 - [x] **6. Thoughts**: `notes` table, board, N to add, colour, tag, pin, archive, delete.
-- [ ] **7. Agent access**: read-only token, `pnpm token:rotate`, `/llms.txt`, `/r/[slug].md`, `/api/refs.json` with filters. Done when an agent given a card URL finds the right card (Flow D).
+- [x] **7. Agent access**: read-only token, `pnpm token:rotate`, `/llms.txt`, `/r/[slug].md`, `/api/refs.json` with filters. Done when an agent given a card URL finds the right card (Flow D).
+  - Code done and unit-tested (filters, llms.txt, JSON-LD, token script). Still manual: add `SUPABASE_SERVICE_ROLE_KEY` on Vercel, run `pnpm token:rotate`, redeploy, then `curl -H "Authorization: Bearer <token>" <hub>/llms.txt`. The JSON-LD embed lands with the card page in slice 5.
 - [ ] **8. Exact rebuild**: frame extraction, contact sheet and palette, motion spec template, render-and-compare loop in the skill, proven on the pre-loader X animation.
 - [ ] **9. Jobs + cold email**: `job_postings`, paste bar on /jobs with job preview, text and screenshot fallback, status list, cold email placeholder in the shell.
 - [ ] **Polish**: review UI against my-motion and emil-design-eng, then `/impeccable polish`.

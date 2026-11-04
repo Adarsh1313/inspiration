@@ -1,5 +1,7 @@
 import { createHash } from "node:crypto";
 import { DuplicateKeyError, type CardStore } from "@hub/capture";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { AgentCard } from "./agent-access";
 import { serverClient } from "./supabase";
 
 type Client = Awaited<ReturnType<typeof serverClient>>;
@@ -37,4 +39,14 @@ export function supabaseCardStore(supabase: Client): CardStore {
       return path;
     },
   };
+}
+
+const AGENT_COLUMNS =
+  "slug,title,kind,shelf,status,pinned,summary,mood,tags,fits,stack,used_in,source_url,source_type,reuse,notes,video_description,browse_notes,picks,poster_sm,preview,author,description,added_at,media_status";
+
+/** Every card in the shape the machine routes use. Pass the service client: the caller is already authorised by the proxy. */
+export async function readAgentCards(supabase: SupabaseClient): Promise<AgentCard[]> {
+  const { data, error } = await supabase.from("cards").select(AGENT_COLUMNS);
+  if (error) throw new Error(error.message);
+  return (data ?? []) as unknown as AgentCard[];
 }

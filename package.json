@@ -15,6 +15,7 @@
     "seed": "pnpm --filter tools seed",
     "enrich": "pnpm --filter tools enrich",
     "cluster": "pnpm --filter tools cluster",
-    "install:commands": "pnpm --filter tools install:commands"
+    "install:commands": "pnpm --filter tools install:commands",
+    "token:rotate": "pnpm --filter tools token:rotate"
   }
 }

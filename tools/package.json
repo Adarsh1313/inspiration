@@ -14,7 +14,8 @@
     "seed": "tsx src/seed.ts",
     "enrich": "tsx src/enrich.ts",
     "cluster": "tsx src/cluster.ts",
-    "install:commands": "tsx src/install-commands.ts"
+    "install:commands": "tsx src/install-commands.ts",
+    "token:rotate": "tsx src/token-rotate.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1000.0",
