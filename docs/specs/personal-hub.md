@@ -232,7 +232,7 @@ Agents given a hub URL can read cards with a read-only token through `llms.txt`,
 - [ ] **4b. Local worker**: task claiming, media steps (yt-dlp, ffmpeg, Playwright, Reddit OAuth, transcripts), Storage upload, mirror refresh, Task Scheduler install script, `pnpm capture:pending`, `/add-ref`.
 - [ ] **4c. Seed + enrichment**: seed script for the 50 cards (`needs_review` flags, @zzzzshawn as a person with related cards), and `/enrich-cards`. Done when all 50 seed cards are in.
 - [ ] **5. Design gallery**: shelves with counts, side-nav shelf expansion, `/design/[shelf]`, source chips, grid with poster, hover clip and summary, touch behaviour, tag and mood filters in the URL, card page with JSON-LD, card menu (pin, copy, open, archive, delete), inline editing, Archived filter, directory badge, slop card Copy button.
-- [ ] **6. Thoughts**: `notes` table, board, N to add, colour, tag, pin, archive, delete.
+- [x] **6. Thoughts**: `notes` table, board, N to add, colour, tag, pin, archive, delete.
 - [ ] **7. Agent access**: read-only token, `pnpm token:rotate`, `/llms.txt`, `/r/[slug].md`, `/api/refs.json` with filters. Done when an agent given a card URL finds the right card (Flow D).
 - [ ] **8. Exact rebuild**: frame extraction, contact sheet and palette, motion spec template, render-and-compare loop in the skill, proven on the pre-loader X animation.
 - [ ] **9. Jobs + cold email**: `job_postings`, paste bar on /jobs with job preview, text and screenshot fallback, status list, cold email placeholder in the shell.
