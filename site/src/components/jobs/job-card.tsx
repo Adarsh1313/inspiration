@@ -1,20 +1,18 @@
 "use client";
 
-import { useState } from "react";
-import { ExternalLink, Trash2 } from "lucide-react";
+import { useRef, useState } from "react";
+import { ExternalLink, Trash2, X } from "lucide-react";
 import { deleteJob, setJobStatus } from "@/app/(app)/jobs/actions";
+import { formatDate } from "@/lib/format";
 import { JOB_STATUSES, JOB_STATUS_LABEL, type JobRow } from "@/lib/jobs";
-
-function formatDate(iso: string | null): string | null {
-  if (!iso) return null;
-  return new Date(`${iso.slice(0, 10)}T00:00:00`).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
-}
 
 /** One saved posting: what it is, where it stands, and a status you can change. */
 export function JobCard({ job }: { job: JobRow }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [confirm, setConfirm] = useState(false);
+  const dialog = useRef<HTMLDialogElement>(null);
+  const hasDetails = !!job.screenshotUrl || !!job.raw_text;
   const posted = formatDate(job.posted_at);
 
   async function changeStatus(status: string) {
@@ -36,16 +34,21 @@ export function JobCard({ job }: { job: JobRow }) {
   return (
     <li className="job" data-status={job.status}>
       {job.screenshotUrl && (
-        <a className="job-shot" href={job.screenshotUrl} target="_blank" rel="noopener noreferrer" aria-label="Open the screenshot">
+        <button type="button" className="job-shot" onClick={() => dialog.current?.showModal()} aria-label="View the screenshot">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={job.screenshotUrl} alt="" loading="lazy" />
-        </a>
+        </button>
       )}
       <div className="job-main">
         <h2 className="job-role">{job.role || job.company || "Untitled posting"}</h2>
         <p className="job-meta">
           {[job.role ? job.company : null, job.location, posted && `Posted ${posted}`].filter(Boolean).join(" · ") || "No details"}
         </p>
+        {hasDetails && (
+          <button type="button" className="link job-details-btn" onClick={() => dialog.current?.showModal()}>
+            {job.screenshotUrl ? "View screenshot" : "View posting text"}
+          </button>
+        )}
         {job.source_url && (
           <a className="link job-link" href={job.source_url} target="_blank" rel="noopener noreferrer">
             {job.source_url.replace(/^https?:\/\/(www\.)?/, "")} <ExternalLink size={12} strokeWidth={1.5} aria-hidden />
@@ -71,6 +74,25 @@ export function JobCard({ job }: { job: JobRow }) {
           </button>
         )}
       </div>
+      {hasDetails && (
+        <dialog
+          ref={dialog}
+          className="lightbox"
+          aria-label={`${job.role || job.company || "Posting"} details`}
+          onClick={(e) => e.target === e.currentTarget && dialog.current?.close() /* a click on the backdrop */}
+        >
+          <div className="lightbox-body">
+            <button type="button" className="icon-btn lightbox-close" aria-label="Close" onClick={() => dialog.current?.close()}>
+              <X size={16} strokeWidth={1.5} />
+            </button>
+            {job.screenshotUrl && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img className="lightbox-img" src={job.screenshotUrl} alt={`Screenshot of the ${job.role || "job"} posting`} />
+            )}
+            {job.raw_text && <pre className="lightbox-text">{job.raw_text}</pre>}
+          </div>
+        </dialog>
+      )}
     </li>
   );
 }

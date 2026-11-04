@@ -8,7 +8,7 @@ type Row = Omit<JobRow, "screenshotUrl"> & { screenshot: string | null };
 export async function readJobs(supabase: SupabaseClient): Promise<JobRow[]> {
   const { data, error } = await supabase
     .from("job_postings")
-    .select("id,source_url,company,role,location,posted_at,status,created_at,screenshot")
+    .select("id,source_url,company,role,location,posted_at,status,raw_text,created_at,screenshot")
     .order("created_at", { ascending: false });
   if (error) throw new Error(error.message);
   const rows = (data ?? []) as unknown as Row[];

@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { Pencil } from "lucide-react";
 import { updateCard } from "@/app/(app)/design/actions";
+import { capitalise } from "@/lib/format";
 import { SHELF_OPTIONS } from "@/lib/source-labels";
 
 export type EditableCard = {
@@ -74,7 +75,7 @@ export function CardEditor({ card }: { card: EditableCard }) {
         <legend>Mood dials, 1 to 10 (leave blank to clear)</legend>
         {(["variance", "motion", "density"] as const).map((k) => (
           <div key={k} className="field">
-            <label htmlFor={`edit-${k}`}>{k[0].toUpperCase() + k.slice(1)}</label>
+            <label htmlFor={`edit-${k}`}>{capitalise(k)}</label>
             <input id={`edit-${k}`} name={k} className="input" type="number" inputMode="numeric" min={1} max={10} step={1} defaultValue={card.mood[k] ?? ""} />
           </div>
         ))}

@@ -1,5 +1,6 @@
 // Validates the inline card editor's form. Pure, so the server action stays thin.
 import type { Shelf } from "@hub/capture";
+import { capitalise } from "./format";
 import { MOOD_KEYS, isShelf, type MoodKey } from "./gallery";
 
 export type CardEdit = {
@@ -40,7 +41,7 @@ export function parseCardEdit(input: CardEditInput): CardEditResult {
       continue;
     }
     const n = Number(raw);
-    if (!Number.isInteger(n) || n < 1 || n > 10) return { ok: false, error: `${key[0].toUpperCase()}${key.slice(1)} is a whole number from 1 to 10.` };
+    if (!Number.isInteger(n) || n < 1 || n > 10) return { ok: false, error: `${capitalise(key)} is a whole number from 1 to 10.` };
     mood[key] = n;
   }
 

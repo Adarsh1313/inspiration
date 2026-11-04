@@ -1,8 +1,9 @@
-import { CaptureError, contentKey, jobKey } from "@hub/capture";
+import { CaptureError } from "@hub/capture";
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { supabaseCardStore } from "@/lib/cards-store";
 import { MAX_IMAGE_BYTES, sniffImage } from "@/lib/image";
+import { jobIdentity, readJobInput } from "@/lib/job-input";
 import { parseJobFields } from "@/lib/jobs";
 import { findJobByKey, insertJob } from "@/lib/jobs-store";
 import { serverClient } from "@/lib/supabase";
@@ -10,7 +11,6 @@ import { serverClient } from "@/lib/supabase";
 export const maxDuration = 15;
 
 type Payload = { url?: unknown; text?: unknown; company?: unknown; role?: unknown; location?: unknown; postedAt?: unknown };
-const MAX_TEXT = 20_000;
 
 /**
  * POST multipart: `payload` (JSON: url and/or text, plus the company, role, location and postedAt as edited on the preview)
@@ -30,8 +30,7 @@ export async function POST(req: Request) {
   const fields = parseJobFields(payload);
   if (!fields.ok) return NextResponse.json({ error: fields.error }, { status: 400 });
 
-  const url = typeof payload.url === "string" ? payload.url.trim() : "";
-  const text = typeof payload.text === "string" ? payload.text.trim().slice(0, MAX_TEXT) : "";
+  const { url, text } = readJobInput(payload);
 
   let image: { bytes: Uint8Array; ext: string; mime: string } | undefined;
   const file = form?.get("image");
@@ -46,8 +45,7 @@ export async function POST(req: Request) {
 
   try {
     const supabase = await serverClient();
-    const link = url ? jobKey(url) : undefined;
-    const key = link?.canonicalKey ?? (text ? contentKey(text) : contentKey(image!.bytes));
+    const { link, key } = jobIdentity({ url, text, image: image?.bytes })!; // a link, text or image is present (checked above)
 
     const existing = await findJobByKey(supabase, key);
     if (existing) return NextResponse.json({ duplicate: existing }, { status: 409 });

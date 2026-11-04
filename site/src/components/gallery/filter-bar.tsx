@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { MOOD_BUCKETS, MOOD_KEYS, SOURCE_FILTERS, buildQuery, sameRange, type Filters, type MoodKey, type SourceFilter } from "@/lib/gallery";
-
-const SOURCE_LABELS: Record<SourceFilter, string> = { x: "X", github: "GitHub", site: "Site", youtube: "YouTube" };
-const MOOD_LABELS: Record<MoodKey, string> = { variance: "Variance", motion: "Motion", density: "Density" };
+import { MOOD_BUCKETS, MOOD_KEYS, SOURCE_FILTERS, buildQuery, sameRange, type Filters, type MoodKey } from "@/lib/gallery";
+import { SOURCE_FILTER_LABEL } from "@/lib/source-labels";
+import { capitalise } from "@/lib/format";
 
 type Props = { basePath: string; filters: Filters; tags: string[]; archivedCount: number };
 
@@ -19,7 +18,7 @@ export function FilterBar({ basePath, filters, tags, archivedCount }: Props) {
         </Link>
         {SOURCE_FILTERS.map((s) => (
           <Link key={s} replace scroll={false} href={to({ ...filters, source: filters.source === s ? undefined : s })} className={chip(filters.source === s)} aria-current={filters.source === s ? "true" : undefined}>
-            {SOURCE_LABELS[s]}
+            {SOURCE_FILTER_LABEL[s]}
           </Link>
         ))}
         <Link replace scroll={false} href={to({ ...filters, archived: !filters.archived })} className={`${chip(filters.archived)} filter-end`} aria-current={filters.archived ? "true" : undefined}>
@@ -43,8 +42,8 @@ export function FilterBar({ basePath, filters, tags, archivedCount }: Props) {
 
       <div className="filter-row filter-moods">
         {MOOD_KEYS.map((key) => (
-          <div key={key} className="filter-mood" role="group" aria-label={MOOD_LABELS[key]}>
-            <span className="filter-label mono">{MOOD_LABELS[key]}</span>
+          <div key={key} className="filter-mood" role="group" aria-label={capitalise(key)}>
+            <span className="filter-label mono">{capitalise(key)}</span>
             {MOOD_BUCKETS.map((b) => {
               const on = sameRange(filters.mood[key], b.range);
               const mood = { ...filters.mood };

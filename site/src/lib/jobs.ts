@@ -22,6 +22,7 @@ export type JobRow = {
   location: string | null;
   posted_at: string | null;
   status: JobStatus;
+  raw_text: string | null;
   created_at: string;
   screenshotUrl: string | null;
 };

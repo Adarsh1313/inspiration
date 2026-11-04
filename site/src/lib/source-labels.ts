@@ -1,4 +1,5 @@
 import { SHELVES, type Shelf, type SourceType } from "@hub/capture";
+import type { SourceFilter } from "./gallery";
 
 export const SOURCE_LABEL: Record<SourceType, string> = {
   "x-post": "X",
@@ -8,6 +9,14 @@ export const SOURCE_LABEL: Record<SourceType, string> = {
   site: "Site",
   video: "Video",
   linkedin: "LinkedIn",
+};
+
+/** Filter chips group several source types, so they borrow the one label table above. */
+export const SOURCE_FILTER_LABEL: Record<SourceFilter, string> = {
+  x: SOURCE_LABEL["x-post"],
+  github: SOURCE_LABEL.github,
+  site: SOURCE_LABEL.site,
+  youtube: SOURCE_LABEL.youtube,
 };
 
 export const SHELF_LABEL: Record<Shelf, string> = {

@@ -8,7 +8,8 @@ import { CopyButton } from "@/components/copy-button";
 import { SourceIcon } from "@/components/source-icon";
 import { cardJsonLd, jsonLdScript } from "@/lib/agent-access";
 import { readCardPage } from "@/lib/cards-store";
-import { MOOD_KEYS } from "@/lib/gallery";
+import { formatDate } from "@/lib/format";
+import { MOOD_KEYS, isChecklistCard } from "@/lib/gallery";
 import { SHELF_LABEL, SOURCE_LABEL } from "@/lib/source-labels";
 import { serverClient } from "@/lib/supabase";
 import { serviceClient } from "@/lib/supabase-service";
@@ -32,11 +33,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return { title: page?.card.title || "Card" };
 }
 
-function formatDate(iso: string | null): string | null {
-  if (!iso) return null;
-  return new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
-}
-
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const { page, owner } = await loadCard(decodeURIComponent(slug));
@@ -48,7 +44,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   const jsonLd = jsonLdScript(cardJsonLd(card, { baseUrl }));
 
   const isDirectory = card.kind === "directory";
-  const checklistText = card.shelf === "anti-slop" || /slop/.test(card.slug) ? card.notes?.trim() : undefined;
+  const checklistText = isChecklistCard(card) ? card.notes?.trim() : undefined;
   const checked = formatDate(card.last_checked);
 
   return (

@@ -76,6 +76,7 @@
   --dial-label-w: 5rem;
   --job-shot-w: 6rem;
   --job-status-w: 10rem;
+  --dialog-w: 56rem;
   --media-ink: oklch(0.99 0 0);
   --media-scrim: linear-gradient(to top, oklch(0 0 0 / 0.78), oklch(0 0 0 / 0));
 

@@ -170,3 +170,11 @@ export function toSearchParams(sp: Record<string, string | string[] | undefined>
   else if (Array.isArray(v) && v[0] != null) out.set(k, v[0]);
   return out;
 }
+
+/**
+ * Cards whose notes are a copyable checklist (the slop-indicators card). Slug is checked as well as shelf
+ * because the slug never changes on an inline edit, so moving the card to another shelf does not hide its Copy button.
+ */
+export function isChecklistCard(card: { shelf: string; slug: string }): boolean {
+  return card.shelf === "anti-slop" || /slop/.test(card.slug);
+}

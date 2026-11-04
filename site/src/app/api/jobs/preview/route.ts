@@ -1,24 +1,23 @@
 import { lookup } from "node:dns/promises";
-import { CaptureError, jobDraft, jobFromText, jobKey } from "@hub/capture";
+import { CaptureError, jobDraft, jobFromText } from "@hub/capture";
 import { NextResponse } from "next/server";
+import { jobIdentity, readJobInput } from "@/lib/job-input";
 import { findJobByKey } from "@/lib/jobs-store";
 import { serverClient } from "@/lib/supabase";
 
 export const maxDuration = 10;
 
 const resolveHost = async (host: string) => (await lookup(host, { all: true })).map((a) => a.address);
-const MAX_TEXT = 20_000;
 
 /** POST { url?, text? } → the preview JobDraft (nothing is saved), or the existing posting if it is a duplicate. */
 export async function POST(req: Request) {
   const body = (await req.json().catch(() => null)) as { url?: unknown; text?: unknown } | null;
-  const url = typeof body?.url === "string" ? body.url.trim() : "";
-  const text = typeof body?.text === "string" ? body.text.trim().slice(0, MAX_TEXT) : "";
+  const { url, text } = readJobInput(body);
   if (!url && !text) return NextResponse.json({ error: "Paste a posting link, or the posting text." }, { status: 400 });
 
   try {
     const supabase = await serverClient();
-    const link = url ? jobKey(url) : undefined;
+    const link = jobIdentity({ url, text })?.link;
     // A link alone: check for a duplicate before fetching anything.
     if (link && !text) {
       const duplicate = await findJobByKey(supabase, link.canonicalKey);

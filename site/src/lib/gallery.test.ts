@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { applyFilters, buildQuery, groupByShelf, isFiltered, parseFilters, parseRange, shelfCounts, sourceFilterOf, topTags, type GalleryCard } from "./gallery";
+import { isChecklistCard, applyFilters, buildQuery, groupByShelf, isFiltered, parseFilters, parseRange, shelfCounts, sourceFilterOf, topTags, type GalleryCard } from "./gallery";
 
 const card = (slug: string, over: Partial<GalleryCard> = {}): GalleryCard => ({
   slug,
@@ -108,5 +108,13 @@ describe("topTags", () => {
   it("ranks by use and keeps active tags even when rare", () => {
     const cards = [card("a", { tags: ["x", "y"] }), card("b", { tags: ["x"] })];
     expect(topTags(cards, ["rare"], 2)).toEqual(["rare", "x"]);
+  });
+});
+
+describe("isChecklistCard", () => {
+  it("holds for the anti-slop shelf and for slop slugs wherever the card is shelved", () => {
+    expect(isChecklistCard({ shelf: "anti-slop", slug: "anything" })).toBe(true);
+    expect(isChecklistCard({ shelf: "typography", slug: "design-slop-indicators" })).toBe(true);
+    expect(isChecklistCard({ shelf: "typography", slug: "orbkit" })).toBe(false);
   });
 });
