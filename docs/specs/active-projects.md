@@ -171,7 +171,7 @@ Seed cards in this order: Portfolio, AgentKanban, Resurface, TabDesk, LocalFlow,
   - the global `/hub-tickets` command
   - "Ticketed · n issues" display and the same-day block split
   - Done when one real run creates issues in a repo and locks the block.
-- [ ] **D. Registration**:
+- [x] **D. Registration**:
   - `projects add`
   - the global CLAUDE.md rule
   - the project-setup skill step
