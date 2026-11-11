@@ -83,6 +83,7 @@
   /* Thoughts wall */
   --note-size: 8rem;
   --pcard-h: 26rem;
+  --drawer-w: 36rem;
   --font-hand: var(--font-kalam), "Segoe Print", "Bradley Hand", cursive;
   --shadow-note: 0 2px 3px oklch(0 0 0 / 0.1), 3px 6px 10px oklch(0 0 0 / 0.12);
   --shadow-note-lift: 0 4px 6px oklch(0 0 0 / 0.1), 6px 10px 16px oklch(0 0 0 / 0.16);

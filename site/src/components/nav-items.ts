@@ -2,10 +2,10 @@ import { SHELVES, type Shelf } from "@hub/capture";
 import type { NavCounts } from "@/lib/cards-store";
 import { SHELF_LABEL } from "@/lib/source-labels";
 
-export type NavItem = { href: string; label: string; icon: "design" | "jobs" | "email" | "thoughts" | "notepad" | "projects"; count: number; sub?: boolean };
+export type NavItem = { href: string; label: string; icon: "design" | "jobs" | "email" | "thoughts" | "notepad" | "projects" | "watch"; count: number; sub?: boolean };
 export type ShelfItem = { href: string; label: string; count: number; shelf: Shelf };
 
-export const NO_COUNTS: NavCounts = { design: 0, shelves: Object.fromEntries(SHELVES.map((s) => [s, 0])) as Record<Shelf, number>, jobs: 0, thoughts: 0, projects: 0 };
+export const NO_COUNTS: NavCounts = { design: 0, shelves: Object.fromEntries(SHELVES.map((s) => [s, 0])) as Record<Shelf, number>, jobs: 0, thoughts: 0, projects: 0, watch: 0 };
 
 export function navItems(counts: NavCounts): NavItem[] {
   return [
@@ -13,6 +13,7 @@ export function navItems(counts: NavCounts): NavItem[] {
     { href: "/jobs", label: "Jobs", icon: "jobs", count: counts.jobs },
     { href: "/jobs/cold-email", label: "Cold email", icon: "email", count: 0, sub: true },
     { href: "/projects", label: "Projects", icon: "projects", count: counts.projects },
+    { href: "/watch", label: "Watch notes", icon: "watch", count: counts.watch },
     { href: "/thoughts", label: "Thoughts", icon: "thoughts", count: counts.thoughts },
     { href: "/notepad", label: "Notepad", icon: "notepad", count: 0 },
   ];

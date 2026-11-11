@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Briefcase, Lightbulb, Mail, Menu, KanbanSquare, NotebookPen, Palette, X, type LucideIcon } from "lucide-react";
+import { Briefcase, Lightbulb, Mail, Menu, KanbanSquare, NotebookPen, PlaySquare, Palette, X, type LucideIcon } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "./icons";
 import { ThemeToggle } from "./theme-toggle";
 import type { NavCounts } from "@/lib/cards-store";
 import { isActive, navItems, shelfItems, showsShelves } from "./nav-items";
 
-const ICONS: Record<string, LucideIcon> = { design: Palette, jobs: Briefcase, email: Mail, thoughts: Lightbulb, notepad: NotebookPen, projects: KanbanSquare };
+const ICONS: Record<string, LucideIcon> = { design: Palette, jobs: Briefcase, email: Mail, thoughts: Lightbulb, notepad: NotebookPen, projects: KanbanSquare, watch: PlaySquare };
 
 export function AppShell({ children, counts }: { children: React.ReactNode; counts: NavCounts }) {
   const pathname = usePathname();

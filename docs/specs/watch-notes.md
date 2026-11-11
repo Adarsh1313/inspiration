@@ -114,19 +114,19 @@ A new `/watch` page, "Watch notes", in the shared shell, with the heading "YouTu
 
 ## Progress
 
-- [ ] **A. Capture and grid**:
+- [x] **A. Capture and grid**:
   - migration (table, RLS, realtime, save function)
   - the watch module with tests
   - `/watch` page and nav item
   - paste bar, preview card, save with duplicate check
   - item grid, empty state, All / YouTube / X filter
   - Done when one pasted video shows as a card after reload.
-- [ ] **B. Notes drawer**:
+- [x] **B. Notes drawer**:
   - right-hand drawer (full-screen sheet on phone), `?item=` link
   - list-aware editor with autosave and sync
   - read view with title, source link and word count
   - Done when notes typed on the phone show on the laptop within seconds.
-- [ ] **C. Timestamps and housekeeping**:
+- [x] **C. Timestamps and housekeeping**:
   - timestamp links in the read view for YouTube items
   - card menu with Delete (one confirm) and stored X image removal
   - Done when `12:34` in a video's notes opens it at that time.
