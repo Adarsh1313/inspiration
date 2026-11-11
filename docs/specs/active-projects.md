@@ -165,7 +165,7 @@ Seed cards in this order: Portfolio, AgentKanban, Resurface, TabDesk, LocalFlow,
   - card ⋯ (Download all, Set repo, Archive)
   - archived list with Restore
   - drag to reorder
-- [ ] **C. Ticketing**:
+- [x] **C. Ticketing**:
   - `hub_worker` grants
   - `projects list | new | ticket | set-repo` CLI
   - the global `/hub-tickets` command

@@ -14,6 +14,7 @@
     "seed": "tsx src/seed.ts",
     "enrich": "tsx src/enrich.ts",
     "cluster": "tsx src/cluster.ts",
+    "projects": "tsx src/projects.ts",
     "install:commands": "tsx src/install-commands.ts",
     "token:rotate": "tsx src/token-rotate.ts",
     "rebuild": "tsx src/rebuild.ts"
