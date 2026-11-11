@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   allFilename, blockFilename, blockMarkdown, cardView, continueList, indent, nextSeq, pickColour,
-  projectForRemote, slugify, todayIST, toMarkdown, unticketed, type Entry,
+  parseRepo, projectForRemote, slugify, todayIST, toMarkdown, unticketed, type Entry,
 } from "./day-blocks";
 
 const entry = (over: Partial<Entry> = {}): Entry => ({ id: "e", day: "2026-11-11", seq: 1, text: "- a", rev: 1, ticketed_at: null, issues: [], ...over });
@@ -136,6 +136,18 @@ describe("projectForRemote", () => {
   it("returns null for strangers", () => {
     expect(projectForRemote(projects, "https://github.com/x/y.git")).toBeNull();
     expect(projectForRemote(projects, "not a url")).toBeNull();
+  });
+});
+
+describe("parseRepo", () => {
+  it("accepts owner/name and GitHub URLs, keeping case", () => {
+    expect(parseRepo("Adarsh1313/Resurface")).toBe("Adarsh1313/Resurface");
+    expect(parseRepo("https://github.com/o/n.git")).toBe("o/n");
+    expect(parseRepo("git@github.com:o/n.git")).toBe("o/n");
+  });
+  it("rejects anything else", () => {
+    expect(parseRepo("just words")).toBeNull();
+    expect(parseRepo("a/b/c")).toBeNull();
   });
 });
 

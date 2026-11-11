@@ -207,12 +207,18 @@ export function allFilename(slug: string): string {
 
 // ---- Projects ----
 
-/** Match `https://github.com/o/n(.git)` or `git@github.com:o/n.git` to a project's repo, case-insensitively. */
+/** `owner/name` from a GitHub remote URL (https or ssh, with or without .git) or a bare `owner/name`. Case is kept. */
+export function parseRepo(input: string): string | null {
+  const t = input.trim();
+  const m = /^(?:.*github\.com[/:])?([^/\s:]+)\/([^/\s]+?)(?:\.git)?\/?$/i.exec(t);
+  return m ? `${m[1]}/${m[2]}` : null;
+}
+
+/** Match a git remote URL to a project's repo, case-insensitively. */
 export function projectForRemote<P extends { repo: string | null }>(projects: P[], remoteUrl: string): P | null {
-  const m = /github\.com[/:]([^/\s]+)\/([^/\s]+?)(?:\.git)?\/?$/i.exec(remoteUrl.trim());
-  if (!m) return null;
-  const repo = `${m[1]}/${m[2]}`.toLowerCase();
-  return projects.find((p) => p.repo?.toLowerCase() === repo) ?? null;
+  if (!/github\.com/i.test(remoteUrl)) return null;
+  const repo = parseRepo(remoteUrl)?.toLowerCase();
+  return repo ? (projects.find((p) => p.repo?.toLowerCase() === repo) ?? null) : null;
 }
 
 export function slugify(name: string): string {

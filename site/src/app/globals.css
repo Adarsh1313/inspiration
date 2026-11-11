@@ -535,3 +535,33 @@ a.pcard-repo { text-decoration: underline; text-underline-offset: 0.2em; }
 .pblock-issues { margin: 0; padding: 0; list-style: none; font-size: var(--text-sm); }
 .pblock-issues a { color: inherit; text-decoration: underline; text-underline-offset: 0.2em; }
 @media (prefers-reduced-motion: reduce) { .pblock-chevron { transition: none; } }
+.pcard[data-dragging="true"] { opacity: 0.5; }
+.pcard-title { display: flex; align-items: center; gap: var(--space-1); }
+.pcard-title .pcard-name { flex: 1; min-width: 0; }
+.pcard-grip { display: grid; place-items: center; width: var(--space-5); height: var(--space-6); margin-left: calc(-1 * var(--space-2)); opacity: 0.4; cursor: grab; touch-action: none; }
+.pcard-grip:hover { opacity: 0.8; }
+.pcard .icon-btn { color: inherit; opacity: 0.6; }
+.pcard .icon-btn:hover { opacity: 1; background: transparent; }
+.pcard-repo-form { display: grid; gap: var(--space-2); }
+.pmenu-root { position: relative; }
+.pmenu {
+  position: absolute; z-index: 6; top: 100%; right: 0;
+  width: var(--menu-w); padding: var(--space-1); display: grid;
+  background: var(--surface); color: var(--ink); border: var(--hairline) solid var(--line); border-radius: var(--radius-md); box-shadow: var(--shadow-lift);
+  transform-origin: top right;
+  transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
+  @starting-style { opacity: 0; transform: translateY(calc(-1 * var(--space-1))) scale(0.97); }
+}
+.pblock-row { display: flex; align-items: center; gap: var(--space-1); }
+.pblock-row .pblock-toggle { flex: 1; min-width: 0; }
+.pblock-edit { min-height: 5rem; border: var(--hairline) solid color-mix(in oklch, currentColor 25%, transparent); border-radius: var(--radius-sm); padding: var(--space-2); }
+.pblock-confirm { display: grid; gap: var(--space-2); font-size: var(--text-sm); }
+.pblock-confirm p { margin: 0; }
+.btn.danger { background: var(--danger); color: var(--accent-ink); }
+.parchived { margin-top: var(--space-6); color: var(--ink-muted); }
+.parchived summary { cursor: pointer; font-size: var(--text-sm); }
+.parchived ul { list-style: none; margin: var(--space-3) 0 0; padding: 0; display: grid; gap: var(--space-2); max-width: 28rem; }
+.parchived li { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); color: var(--ink); }
+.parchived .btn { margin-top: 0; }
+.pcard .btn { margin-top: 0; }
+@media (prefers-reduced-motion: reduce) { .pmenu { transition: none; } }

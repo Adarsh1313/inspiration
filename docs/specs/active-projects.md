@@ -160,7 +160,7 @@ Seed cards in this order: Portfolio, AgentKanban, Resurface, TabDesk, LocalFlow,
   - cards in the 4-up grid, open-entry editor with list help, autosave and sync
   - collapsed day blocks
   - Done when dumping on the phone shows on the laptop and yesterday's text appears as a dated block.
-- [ ] **B. Menus and management**:
+- [x] **B. Menus and management**:
   - block ⋯ (Edit, Copy, .md, .txt, Delete)
   - card ⋯ (Download all, Set repo, Archive)
   - archived list with Restore

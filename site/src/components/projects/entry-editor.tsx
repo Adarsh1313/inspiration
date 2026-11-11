@@ -1,10 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { browserClient } from "@/lib/supabase-browser";
-import { continueList, indent, todayIST, type Entry } from "@/lib/projects/day-blocks";
+import { todayIST, type Entry } from "@/lib/projects/day-blocks";
 import { onLoad, onRemote, onSaveResult, type NotepadState } from "@/lib/notepad-sync";
 import type { ProjectEntry } from "@/lib/projects/store";
+import { ListTextarea } from "./list-textarea";
 
 const DEBOUNCE_MS = 500;
 const RETRY_MS = 5000;
@@ -46,15 +47,6 @@ export function EntryEditor({
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const retry = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const saving = useRef(false);
-  const area = useRef<HTMLTextAreaElement>(null);
-  const caret = useRef<number | null>(null);
-
-  useLayoutEffect(() => {
-    if (caret.current !== null && area.current) {
-      area.current.setSelectionRange(caret.current, caret.current);
-      caret.current = null;
-    }
-  });
 
   const set = useCallback((next: Latest) => {
     latest.current = next;
@@ -168,34 +160,12 @@ export function EntryEditor({
     timer.current = setTimeout(() => void save(), DEBOUNCE_MS);
   }
 
-  function onKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
-    const el = e.currentTarget;
-    if (e.nativeEvent.isComposing) return;
-    if (e.key === "Enter" && !e.shiftKey && !e.metaKey && !e.ctrlKey && el.selectionStart === el.selectionEnd) {
-      const r = continueList(el.value, el.selectionStart);
-      if (r) {
-        e.preventDefault();
-        caret.current = r.caret;
-        change(r.text);
-      }
-    } else if (e.key === "Tab" && !e.metaKey && !e.ctrlKey && !e.altKey) {
-      const r = indent(el.value, { start: el.selectionStart, end: el.selectionEnd }, e.shiftKey ? -1 : 1);
-      if (r) {
-        e.preventDefault();
-        change(r.text);
-        requestAnimationFrame(() => el.setSelectionRange(r.start, r.end));
-      }
-    }
-  }
-
   return (
     <div className="pe">
-      <textarea
-        ref={area}
+      <ListTextarea
         className="pe-area"
         value={text}
-        onChange={(e) => change(e.target.value)}
-        onKeyDown={onKeyDown}
+        onValueChange={change}
         placeholder="Dump ideas…"
         aria-label={`${name} notes for today`}
         spellCheck
