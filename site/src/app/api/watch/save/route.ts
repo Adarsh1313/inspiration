@@ -17,7 +17,7 @@ async function fetchXImage(url: string): Promise<{ bytes: Uint8Array; ext: strin
     const u = assertPublicUrl(url);
     if (u.protocol !== "https:" || !(u.hostname === "twimg.com" || u.hostname.endsWith(".twimg.com"))) return null;
     const res = await fetch(u, { redirect: "manual", signal: AbortSignal.timeout(5000) });
-    if (!res.ok) return null;
+    if (!res.ok || Number(res.headers.get("content-length") ?? 0) > MAX_IMAGE_BYTES) return null;
     const bytes = new Uint8Array(await res.arrayBuffer());
     if (bytes.length > MAX_IMAGE_BYTES) return null;
     const sniffed = sniffImage(bytes);

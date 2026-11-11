@@ -25,7 +25,9 @@ function readDraft(id: string): LocalDraft | null {
 }
 function writeDraft(id: string, d: LocalDraft) {
   try {
-    localStorage.setItem(draftKey(id), JSON.stringify(d));
+    // A clean copy matches the server, so there is nothing to keep on this device.
+    if (d.dirty) localStorage.setItem(draftKey(id), JSON.stringify(d));
+    else localStorage.removeItem(draftKey(id));
   } catch {}
 }
 
