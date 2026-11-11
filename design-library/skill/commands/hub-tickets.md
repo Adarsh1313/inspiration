@@ -54,7 +54,7 @@ Pass every entry id you read for that project and all of its created issues:
 pnpm --dir C:\Users\Adarsh\inspiration projects ticket <entryId> <entryId> --issues '[{"number":12,"title":"...","url":"https://github.com/o/n/issues/12"}]'
 ```
 
-If creating issues failed part-way, ticket only after at least one issue exists, and tell Adarsh exactly which bullets are not covered. Do not mark entries ticketed if nothing was created.
+If creating issues failed part-way, ticket only the entries whose bullets are fully covered by issues that exist, and tell Adarsh which bullets are not covered. Entries you leave unticketed are picked up on the next run. Do not mark entries ticketed if nothing was created.
 
 ## 5. Summarise
 
