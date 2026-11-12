@@ -6,13 +6,14 @@ export type Project = {
   slug: string;
   name: string;
   repo: string | null;
+  local_url: string | null;
   colour: string;
   position: number;
   archived_at: string | null;
 };
 export type ProjectEntry = Entry & { project_id: string };
 
-export const PROJECT_COLUMNS = "id,slug,name,repo,colour,position,archived_at";
+export const PROJECT_COLUMNS = "id,slug,name,repo,local_url,colour,position,archived_at";
 export const ENTRY_COLUMNS = "id,project_id,day,seq,text,rev,ticketed_at,issues";
 
 /** Every project (active and archived, in board order) with all their entries. */

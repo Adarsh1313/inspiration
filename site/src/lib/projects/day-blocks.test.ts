@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   allFilename, blockFilename, blockMarkdown, cardView, continueList, indent, nextSeq, pickColour,
-  parseRepo, projectForRemote, slugify, todayIST, toMarkdown, unticketed, type Entry,
+  parseLocalUrl, parseRepo, projectForRemote, slugify, todayIST, toMarkdown, unticketed, type Entry,
 } from "./day-blocks";
 
 const entry = (over: Partial<Entry> = {}): Entry => ({ id: "e", day: "2026-11-11", seq: 1, text: "- a", rev: 1, ticketed_at: null, issues: [], ...over });
@@ -149,6 +149,16 @@ describe("parseRepo", () => {
     expect(parseRepo("just words")).toBeNull();
     expect(parseRepo("a/b/c")).toBeNull();
   });
+});
+
+describe("parseLocalUrl", () => {
+  it.each([
+    ["http://localhost:3000", "http://localhost:3000"],
+    ["localhost:3000/app", "http://localhost:3000/app"],
+    ["3007", "http://localhost:3007"],
+    ["https://127.0.0.1:8443", "https://127.0.0.1:8443"],
+  ])("accepts %s", (input, out) => expect(parseLocalUrl(input)).toBe(out));
+  it.each(["https://example.com", "http://localhost.evil.com", "ftp://localhost", "hello", ""])("rejects %s", (input) => expect(parseLocalUrl(input)).toBeNull());
 });
 
 describe("slugify and pickColour", () => {

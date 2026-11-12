@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { parseRepo } from "@/lib/projects/day-blocks";
+import { parseLocalUrl, parseRepo } from "@/lib/projects/day-blocks";
 import { serverClient } from "@/lib/supabase";
 
 export type ActionResult = { ok: true } | { ok: false; error: string };
@@ -51,10 +51,12 @@ export async function reorderProjects(ids: string[]): Promise<ActionResult> {
   return results.some((r) => r.error) ? FAIL : { ok: true };
 }
 
-/** Accepts `owner/name` or a GitHub URL; an empty value clears the repo. */
-export async function setProjectRepo(id: string, input: string): Promise<ActionResult & { repo?: string | null }> {
-  const repo = input.trim() === "" ? null : parseRepo(input);
-  if (input.trim() !== "" && !repo) return { ok: false, error: "Use owner/name, like Adarsh1313/resurface." };
-  const { error } = await (await serverClient()).from("projects").update({ repo }).eq("id", id);
-  return error ? FAIL : { ok: true, repo };
+/** Accepts `owner/name` or a GitHub URL, and a local dev address (`3000`, `localhost:3000`). Empty values clear them. */
+export async function setProjectLinks(id: string, repoInput: string, localInput: string): Promise<ActionResult & { repo?: string | null; local_url?: string | null }> {
+  const repo = repoInput.trim() === "" ? null : parseRepo(repoInput);
+  if (repoInput.trim() !== "" && !repo) return { ok: false, error: "Use owner/name, like Adarsh1313/resurface." };
+  const local_url = localInput.trim() === "" ? null : parseLocalUrl(localInput);
+  if (localInput.trim() !== "" && !local_url) return { ok: false, error: "Use a local address like localhost:3000." };
+  const { error } = await (await serverClient()).from("projects").update({ repo, local_url }).eq("id", id);
+  return error ? FAIL : { ok: true, repo, local_url };
 }

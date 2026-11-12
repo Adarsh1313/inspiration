@@ -5,8 +5,9 @@
 //   pnpm projects ticket <entryId...> --issues '[{"number":1,"title":"...","url":"..."}]'
 //   pnpm projects add --name <n> [--repo o/n] [--slug s]   idempotent
 //   pnpm projects set-repo <slug> <o/n>
+//   pnpm projects set-local <slug> <localhost:port>
 import type pg from "pg";
-import { parseRepo, pickColour, projectForRemote, slugify, unticketed, type Entry } from "../../site/src/lib/projects/day-blocks";
+import { parseLocalUrl, parseRepo, pickColour, projectForRemote, slugify, unticketed, type Entry } from "../../site/src/lib/projects/day-blocks";
 import { cli, connect } from "./env";
 import { parseArgs, parseIssues, type Parsed } from "./projects-args";
 
@@ -94,6 +95,15 @@ async function setRepo(client: pg.Client, args: Parsed): Promise<void> {
   console.log(`${slug} → ${repo}`);
 }
 
+async function setLocal(client: pg.Client, args: Parsed): Promise<void> {
+  const [slug, input] = args.positional;
+  const url = input ? parseLocalUrl(input) : null;
+  if (!slug || !url) throw new Error("Usage: pnpm projects set-local <slug> <localhost:port>");
+  const res = await client.query("update public.projects set local_url = $2 where slug = $1", [slug, url]);
+  if (res.rowCount === 0) throw new Error(`No project with slug "${slug}".`);
+  console.log(`${slug} → ${url}`);
+}
+
 cli(async () => {
   const [command, ...rest] = process.argv.slice(2);
   const args = parseArgs(rest);
@@ -104,7 +114,8 @@ cli(async () => {
     else if (command === "ticket") await ticket(client, args);
     else if (command === "add") await add(client, args);
     else if (command === "set-repo") await setRepo(client, args);
-    else throw new Error("Usage: pnpm projects list | new | ticket | add | set-repo");
+    else if (command === "set-local") await setLocal(client, args);
+    else throw new Error("Usage: pnpm projects list | new | ticket | add | set-repo | set-local");
   } finally {
     await client.end();
   }

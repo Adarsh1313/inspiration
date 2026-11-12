@@ -214,6 +214,14 @@ export function parseRepo(input: string): string | null {
   return m ? `${m[1]}/${m[2]}` : null;
 }
 
+/** A local dev server address: http(s)://localhost or 127.0.0.1, optional port and path. A bare `3000` or `localhost:3000` works too. Invalid → null. */
+export function parseLocalUrl(input: string): string | null {
+  let t = input.trim();
+  if (/^\d{2,5}$/.test(t)) t = `localhost:${t}`;
+  if (!/^https?:\/\//i.test(t)) t = `http://${t}`;
+  return /^https?:\/\/(localhost|127\.0\.0\.1)(:\d{2,5})?(\/\S*)?$/i.test(t) ? t : null;
+}
+
 /** Match a git remote URL to a project's repo, case-insensitively. */
 export function projectForRemote<P extends { repo: string | null }>(projects: P[], remoteUrl: string): P | null {
   if (!/github\.com/i.test(remoteUrl)) return null;

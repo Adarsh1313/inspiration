@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { ChevronRight, ExternalLink, GripVertical } from "lucide-react";
-import { archiveProject, deleteEntry, editEntry, setProjectRepo } from "@/app/(app)/projects/actions";
+import { ChevronRight, ExternalLink, GripVertical, Play } from "lucide-react";
+import { archiveProject, deleteEntry, editEntry, setProjectLinks } from "@/app/(app)/projects/actions";
 import { allFilename, blockFilename, blockMarkdown, blockText, cardView, toMarkdown, type Block } from "@/lib/projects/day-blocks";
 import { copyText, downloadFile } from "@/lib/projects/download";
 import type { Project, ProjectEntry } from "@/lib/projects/store";
@@ -61,7 +61,7 @@ export function ProjectCard({
             label={`${project.name} options`}
             items={[
               { label: "Download all", onSelect: () => downloadFile(allFilename(project.slug), toMarkdown(project, entries), "text/markdown"), disabled: entries.length === 0 },
-              { label: "Set repo", onSelect: () => setEditingRepo(true) },
+              { label: "Edit links", onSelect: () => setEditingRepo(true) },
               { label: "Move earlier", onSelect: () => drag.onMove(-1) },
               { label: "Move later", onSelect: () => drag.onMove(1) },
               { label: "Archive", onSelect: () => void archive(), danger: true },
@@ -69,19 +69,28 @@ export function ProjectCard({
           />
         </div>
         {editingRepo ? (
-          <RepoForm
+          <LinksForm
             project={project}
-            onDone={(repo) => {
+            onDone={(patch) => {
               setEditingRepo(false);
-              if (repo !== undefined) onChange({ repo });
+              if (patch) onChange(patch);
             }}
           />
-        ) : project.repo ? (
-          <a className="pcard-repo mono" href={`https://github.com/${project.repo}`} target="_blank" rel="noopener noreferrer">
-            {project.repo} <ExternalLink size={12} strokeWidth={1.5} aria-hidden />
-          </a>
         ) : (
-          <span className="pcard-repo mono">no repo yet</span>
+          <>
+            {project.repo ? (
+              <a className="pcard-repo mono" href={`https://github.com/${project.repo}`} target="_blank" rel="noopener noreferrer">
+                {project.repo} <ExternalLink size={12} strokeWidth={1.5} aria-hidden />
+              </a>
+            ) : (
+              <span className="pcard-repo mono">no repo yet</span>
+            )}
+            {project.local_url && (
+              <a className="pcard-repo mono" href={project.local_url} target="_blank" rel="noopener noreferrer" title="Opens your local dev server">
+                {project.local_url.replace(/^https?:\/\//, "")} <Play size={12} strokeWidth={1.5} aria-hidden />
+              </a>
+            )}
+          </>
         )}
         {message && <p className="error" role="alert">{message}</p>}
       </header>
@@ -99,23 +108,25 @@ export function ProjectCard({
   );
 }
 
-function RepoForm({ project, onDone }: { project: Project; onDone: (repo?: string | null) => void }) {
-  const [value, setValue] = useState(project.repo ?? "");
+function LinksForm({ project, onDone }: { project: Project; onDone: (patch?: Partial<Project>) => void }) {
+  const [repo, setRepo] = useState(project.repo ?? "");
+  const [local, setLocal] = useState(project.local_url ?? "");
   const [error, setError] = useState<string | null>(null);
   const [pending, start] = useTransition();
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
     start(async () => {
-      const r = await setProjectRepo(project.id, value);
-      if (r.ok) onDone(r.repo ?? null);
+      const r = await setProjectLinks(project.id, repo, local);
+      if (r.ok) onDone({ repo: r.repo ?? null, local_url: r.local_url ?? null });
       else setError(r.error);
     });
   }
 
   return (
     <form className="pcard-repo-form" onSubmit={submit}>
-      <input className="input mono" value={value} onChange={(e) => setValue(e.target.value)} placeholder="owner/name" aria-label="GitHub repo" autoFocus onKeyDown={(e) => e.key === "Escape" && onDone()} />
+      <input className="input mono" value={repo} onChange={(e) => setRepo(e.target.value)} placeholder="GitHub: owner/name" aria-label="GitHub repo" autoFocus onKeyDown={(e) => e.key === "Escape" && onDone()} />
+      <input className="input mono" value={local} onChange={(e) => setLocal(e.target.value)} placeholder="Local server: localhost:3000" aria-label="Local dev server" onKeyDown={(e) => e.key === "Escape" && onDone()} />
       <div className="row">
         <button type="submit" className="btn bar-btn" disabled={pending}>Save</button>
         <button type="button" className="btn secondary bar-btn" onClick={() => onDone()}>Cancel</button>
